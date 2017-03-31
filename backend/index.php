@@ -58,4 +58,4 @@
         echo $data;
     }
   $dbHandler->disconnect();
- ?>
+?>

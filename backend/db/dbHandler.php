@@ -26,8 +26,7 @@
       return count($result) == 1;
     }
     public function getUsers($device){
-        $result = $this->db->executeQuery($sql, array());
-      $sql = "SELECT * from mamn01__users;";
+      $sql = "SELECT id, name, hugpoints, lat, lng, wantsHug from mamn01__users;";
         $result = $this->db->executeQuery($sql, array());
         $this->log("getHugboard() -> " . json_encode($result), $device);
       return $result;
@@ -39,13 +38,13 @@
       return $result;
     }
     public function getByName($device, $name){
-      $sql = "SELECT * from mamn01__users WHERE name=?;";
+      $sql = "SELECT id, name, hugpoints, lat, lng, wantsHug from mamn01__users WHERE name=?;";
         $result = $this->db->executeQuery($sql, array($name));
         $this->log("getByName(" . $name . ") -> " . json_encode($result), $device);
       return $result[0];
     }
     public function getById($device, $id){
-      $sql = "SELECT * from mamn01__users WHERE id=?;";
+      $sql = "SELECT id, name, hugpoints, lat, lng, wantsHug from mamn01__users WHERE id=?;";
         $result = $this->db->executeQuery($sql, array($id));
         $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
@@ -69,7 +68,7 @@
       return $this->db->getLastId();
     }
     public function wantHug($device){
-      $sql = "UPDATE mamn01__users SET wantHug=1 WHERE device=?;";
+      $sql = "UPDATE mamn01__users SET wantsHug=1 WHERE device=?;";
         $result = $this->db->executeUpdate($sql, array($device));
         $this->log("wantHug() -> ", $device);
       return $this->db->getLastId();
@@ -81,11 +80,13 @@
       return $this->db->getLastId();
     }
     public function getNearbyWanters($device, $lat, $lng){
-      $sql = "SELECT id, name, lat, lng, SQRT(POW(69.1 * (latitude - ?), 2) +POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 HAVING distance < 25 ORDER BY distance;";
-        $result = $this->db->executeQuery($sql, array());
+      $sql = "SELECT id, name, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 HAVING distance < 2 ORDER BY distance;";
+        $result = $this->db->executeQuery($sql, array($lat, $lng));
         $this->log("getNearbyWanters() -> " . json_encode($result), $device);
       return $result;
     }
+
+    
   
     // Log
     // ======================================================
@@ -98,5 +99,6 @@
         $result = $this->db->executeQuery($sql, array());
       return $result;
     }
+
   }
 ?>
