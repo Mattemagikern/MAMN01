@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
      * Redirect user to HugboardActivity
      */
     public void StartHugboardActivity(View v){
-        Intent i = new Intent(this, MainActivity.class); // TODO: Send to correct Activity class.
+        Intent i = new Intent(this, RatingActivity.class);
         startActivity(i);
     }
 
