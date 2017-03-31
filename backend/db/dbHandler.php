@@ -80,10 +80,14 @@
         $this->log("updateCoordinate(" . $lat . ", " . $lng . ") -> ", $device);
       return $this->db->getLastId();
     }
-
-    
+    public function getNearbyWanters($device, $lat, $lng){
+      $sql = "SELECT id, name, lat, lng, SQRT(POW(69.1 * (latitude - ?), 2) +POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 HAVING distance < 25 ORDER BY distance;";
+        $result = $this->db->executeQuery($sql, array());
+        $this->log("getNearbyWanters() -> " . json_encode($result), $device);
+      return $result;
+    }
   
-      // Log
+    // Log
     // ======================================================
     public function log($logMessage, $device){
       $sql = "INSERT INTO mamn01__log (message, device, logdate) VALUES (?,?,NOW());";
@@ -94,6 +98,5 @@
         $result = $this->db->executeQuery($sql, array());
       return $result;
     }
-
   }
 ?>
