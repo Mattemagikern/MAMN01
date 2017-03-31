@@ -31,9 +31,17 @@ public class RatingActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
+        fetchHugBoard();
 
 
-       // Instantiate the RequestQueue.
+    }
+
+    /*
+      *  Fetch from the backend the list of hugboard.
+      *  Add the response to the ListAdapter for updating the ListView.
+     */
+    private void fetchHugBoard() {
+        // Instantiate the RequestQueue.
         String url = "http://shapeapp.se/mamn01/?action=getHugboard";
         final ArrayList<String> hugboard = new ArrayList<String>();
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
@@ -62,10 +70,8 @@ public class RatingActivity extends ListActivity {
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
         Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
     }
-
 }
