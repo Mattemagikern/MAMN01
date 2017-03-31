@@ -9,38 +9,24 @@
     android:paddingRight="8dp">
 
 
-    <Button
-        android:id="@+id/ratingbackbutton"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_height="40dp"
-        android:onClick="finishRatingActivity"
-        android:text="Go back" />
 
-    <LinearLayout
+    <ListView android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:contentDescription=""
+        tools:context="mamn01.projekt.RatingActivity"
+        android:layout_weight="1"
+        android:drawSelectorOnTop="false">
 
-        <ListView android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@id/ratingbackbutton"
-            android:contentDescription=""
-            tools:context="mamn01.projekt.RatingActivity"
-            android:layout_weight="1"
-            android:drawSelectorOnTop="false">
+    </ListView>
 
-        </ListView>
-
-        <TextView android:id="@android:id/empty"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:text="No ratings are registered...\n Go start hug and become the hugmaster!"/>
+    <TextView android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:text="No ratings are registered...\n Go start hug and become the hugmaster!"/>
 
 
-    </LinearLayout>
 
 
 </LinearLayout>

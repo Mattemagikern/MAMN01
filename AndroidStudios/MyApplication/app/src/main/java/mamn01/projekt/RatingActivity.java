@@ -1,19 +1,13 @@
 package mamn01.projekt;
 
-import android.app.Activity;
 import android.app.ListActivity;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Contacts;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 public class RatingActivity extends ListActivity {
 
@@ -38,10 +32,5 @@ public class RatingActivity extends ListActivity {
         String item = (String) getListAdapter().getItem(position);
         Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
     }
-
-    public void finishRatingActivity(View v){
-        finish();
-    }
-
 
 }
