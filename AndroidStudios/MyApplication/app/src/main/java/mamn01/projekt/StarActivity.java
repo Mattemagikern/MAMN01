@@ -1,11 +1,12 @@
 package mamn01.projekt;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class StarActivity extends AppCompatActivity {
+public class StarActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
