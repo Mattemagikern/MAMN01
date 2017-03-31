@@ -3,6 +3,7 @@ package mamn01.projekt;
 import android.app.ListActivity;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,8 +23,9 @@ import java.util.ArrayList;
 
 public class RatingActivity extends ListActivity {
 
-    String[] values = { "1. Nille\t\t50 Hugpoint", "2. Hanna\t\t30 Hugpoint", "3. Hanna\t\t10 Hugpoint", "4. Måns\t\t-10 Hugpoint" };
-    //String[] values = {};
+
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -31,9 +33,8 @@ public class RatingActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
+
         fetchHugBoard();
-
-
     }
 
     /*
@@ -42,7 +43,8 @@ public class RatingActivity extends ListActivity {
      */
     private void fetchHugBoard() {
         // Instantiate the RequestQueue.
-        String url = "http://shapeapp.se/mamn01/?action=getHugboard";
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String url = "http://shapeapp.se/mamn01/?action=getHugboard&device=" + deviceId;
         final ArrayList<String> hugboard = new ArrayList<String>();
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
             (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -71,7 +73,7 @@ public class RatingActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+        //String item = (String) getListAdapter().getItem(position);
+        //Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();;
     }
 }
