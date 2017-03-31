@@ -3,11 +3,11 @@ package mamn01.projekt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MapActivity extends AppCompatActivity {
+public class PugActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map2);
+        setContentView(R.layout.activity_pug);
     }
 }
