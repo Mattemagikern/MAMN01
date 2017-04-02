@@ -14,6 +14,7 @@
         android:supportsRtl="true">
 
         <activity android:name=".PugActivity" />
+        <activity android:name=".GiveActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".StarActivity"
             android:theme="@style/Theme.AppCompat"
