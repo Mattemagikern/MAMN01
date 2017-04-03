@@ -8,7 +8,6 @@ import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,7 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class RatingActivity extends ListActivity {
+public class HugboardActivity extends ListActivity {
 
 
 
@@ -55,7 +54,7 @@ public class RatingActivity extends ListActivity {
                             JSONObject o = (JSONObject) response.get(i);
                             hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
                         }
-                        setListAdapter(new ArrayAdapter<String>(RatingActivity.this,
+                        setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
                                 android.R.layout.simple_list_item_1, hugboard));
                     } catch (JSONException e) {
                         e.printStackTrace();
