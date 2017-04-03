@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class Serching extends AppCompatActivity {
     private ImageView spinner;
     private TextView text;
-    private Thread t;
+    private boolean handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class Serching extends AppCompatActivity {
                 R.anim.rotate);
         spinner.startAnimation(animation);
         //Let's it spin for 5s, befor starting new activity
-        new Handler().postDelayed(new Runnable() {
+        handler = new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(Serching.this, Connect.class);
@@ -42,7 +42,5 @@ public class Serching extends AppCompatActivity {
             }
         }, 5000);
     }
-
-
 
 }
