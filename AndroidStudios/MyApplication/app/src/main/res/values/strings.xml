@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Projekt</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">HappyApp</string>
+    <string name="title_activity_main">HappyApp</string>
     <string name="title_activity_map">MapActivity</string>
-    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_splash_screen">HappyApp</string>
     <string name="hugboard">HugBoard</string>
 </resources>
