@@ -25,6 +25,11 @@
       $result = $this->db->executeQuery($sql, array($device));
       return count($result) == 1;
     }
+    public function deviceExist($device){
+      $sql = "SELECT * from mamn01__users WHERE device=?;";
+        $result = $this->db->executeQuery($sql, array($device));
+      return count($result) == 1;
+    }
     public function getUsers($device){
       $sql = "SELECT id, name, hugpoints, lat, lng, wantsHug from mamn01__users;";
         $result = $this->db->executeQuery($sql, array());

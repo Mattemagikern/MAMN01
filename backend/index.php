@@ -41,7 +41,11 @@
                 $data = json_encode($dbHandler->createUser($_GET["device"], $_GET["name"]));
                 break;
             case "updateName":
-                $data = json_encode($dbHandler->updateName($_GET["device"], $_GET["name"]));
+                if($dbHandler->deviceExist($_GET["device"])){
+                  $data = json_encode($dbHandler->updateName($_GET["device"], $_GET["name"]));
+                } else {
+                  $data = json_encode($dbHandler->createUser($_GET["device"], $_GET["name"]));
+                }
                 break;
             case "getById":
                 $data = json_encode($dbHandler->getById($_GET["device"], $_GET["id"]));
