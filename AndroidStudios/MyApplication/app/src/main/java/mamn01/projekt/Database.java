@@ -13,21 +13,23 @@ public class Database {
 
     }
     public void UpdatePos(){
+        /*
         if(currentPos[0] != bar.latitude() && currentPos[1] != foo.longitude()){
             currentPos[0]= bar.latitude();
             currentpos[1] = foo.longitude();
-            UpdateServer(lat,long);
+            UpdateServer(lat,lng);
 
         }
+        */
     }
     public String[] getTopTen(){
-
+        return null; //TODO: Implement.
     }
     public String[] getUsersInArea(String pos){
-
+        return null; //TODO: Implement.
     }
     public String getPosHugger(String HuggerId){
-
+        return null; //TODO: Implement.
     }
     private class pos{
         private String[] pos;
