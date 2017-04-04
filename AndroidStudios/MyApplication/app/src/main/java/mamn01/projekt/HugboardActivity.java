@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,13 +46,14 @@ public class HugboardActivity extends ListActivity {
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         String url = "http://shapeapp.se/mamn01/?action=getHugboard&device=" + deviceId;
         final ArrayList<String> hugboard = new ArrayList<String>();
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest
-            (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+            (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONArray response) {
+                public void onResponse(JSONObject response) {
                     try {
-                        for(int i = 0; i < response.length(); i++){
-                            JSONObject o = (JSONObject) response.get(i);
+                        JSONArray data = (JSONArray) response.get("data");
+                        for(int i = 0; i < data.length(); i++){
+                            JSONObject o = (JSONObject) data.get(i);
                             hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
                         }
                         setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
