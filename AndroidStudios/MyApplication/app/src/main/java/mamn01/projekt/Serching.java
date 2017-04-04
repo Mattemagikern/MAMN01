@@ -31,10 +31,10 @@ import java.util.TimerTask;
  * Created by mattemagikern on 2017-04-02.
  */
 
-public class Serching extends AppCompatActivity {
+public class Serching extends AppCompatActivity  {
     private ImageView spinner;
     private TextView text;
-    private Handler handler;
+    private Timer Time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,33 +47,37 @@ public class Serching extends AppCompatActivity {
                 R.anim.rotate);
         spinner.startAnimation(animation);
         //Let's it spin for 5s, befor starting new activity
-        new Timer().scheduleAtFixedRate(new TimerTask(){
+      final Timer t =  new Timer();
+        t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
                 String deviceId = Settings.Secure.getString(Serching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
-
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject data;
-                            try {
-                                String dataStr = (String) response.get("data");
-                                data =  new JSONObject(dataStr);
-                            }catch(Exception e) {
-                                data = (JSONObject) response.getJSONObject("data");
-                            }
-                            Intent i = new Intent(Serching.this, Connect.class);
-                            i.putExtra("mymatch", data.toString());
-                            startActivity(i);
-                            finish();
+                                try {
+                                    JSONObject data;
+                                    try {
+                                        String dataStr = (String) response.get("data");
+                                        data = new JSONObject(dataStr);
+                                    } catch (Exception e) {
+                                        data = (JSONObject) response.getJSONObject("data");
+                                    }
 
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
-                        }
-                    }
+                                    Intent i = new Intent(Serching.this, Connect.class);
+                                    i.putExtra("mymatch", data.toString());
+                                    startActivity(i);
+                                    t.cancel();
+                                    t.purge();
+                                    finish();
+                                } catch (Exception e) {
+                                    System.out.println("Error: " + e.getMessage());
+                                }
+                            }
+
+
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -82,43 +86,9 @@ public class Serching extends AppCompatActivity {
                 });
                 MySingleton.getInstance(Serching.this).addToRequestQueue(jsObjRequest);
             }
-        },0,500);
+        },0,2000);
     }
     public void CancelPressed(View v){
         finish();
-    }
-
-
-    private void matchMeUp() {
-        // Instantiate the RequestQueue.
-        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject data = (JSONObject) response.get("data");
-
-
-                            Intent i = new Intent(Serching.this, Connect.class);
-                            i.putExtra("mymatch", data.toString());
-                            startActivity(i);
-                            finish();
-
-                        } catch (Exception e) {
-                            matchMeUp();
-                            System.out.println("Error: " + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("Error: " + error.getMessage());
-                    }
-                });
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }

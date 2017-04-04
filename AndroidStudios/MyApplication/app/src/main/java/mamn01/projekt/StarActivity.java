@@ -11,7 +11,7 @@ public class StarActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_star);
+        setContentView(R.layout.star_activity);
     }
 
     /**
