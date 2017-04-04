@@ -57,25 +57,30 @@ public class Serching extends AppCompatActivity {
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                try {
-                                    String dataStr = (String) response.get("data");
-                                    JSONObject data = new JSONObject(dataStr);
-
-                                    Intent i = new Intent(Serching.this, Connect.class);
-                                    i.putExtra("mymatch", data.toString());
-                                    startActivity(i);
-                                    finish();
-
-                                } catch (Exception e) {
-                                    System.out.println("Error: " + e.getMessage());
-                                }
+                        try {
+                            JSONObject data;
+                            try {
+                                String dataStr = (String) response.get("data");
+                                data =  new JSONObject(dataStr);
+                            }catch(Exception e) {
+                                data = (JSONObject) response.getJSONObject("data");
                             }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Error: " + error.getMessage());
-                            }
-                        });
+                            Intent i = new Intent(Serching.this, Connect.class);
+                            i.putExtra("mymatch", data.toString());
+                            startActivity(i);
+                            finish();
+
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+                MySingleton.getInstance(Serching.this).addToRequestQueue(jsObjRequest);
             }
         },0,500);
     }
