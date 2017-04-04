@@ -97,6 +97,20 @@
       return $result;
     }
 
+
+    public function matchMeUp($device, $lat, $lng, $myrange){
+      $sql = "SELECT id, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 AND isBusy=0 HAVING distance < hugrange AND distance < ? ORDER BY distance LIMIT 1;";
+      $result = $this->db->executeQuery($sql, array($lat, $lng, $myrange));
+      $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
+      return $result;
+    }
+    public function setBusy($device, $id){
+      $sql = "UPDATE mamn01__users SET isBusy=? WHERE device=?;";
+      $result = $this->db->executeUpdate($sql, array($id, $device));
+      $this->log("setBusy(" . $id . ") -> ", $device);
+      return $this->db->getLastId();
+    }
+
     
   
     // Log
