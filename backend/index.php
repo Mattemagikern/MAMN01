@@ -47,6 +47,9 @@
                   $data = json_encode($dbHandler->createUser($_GET["device"], $_GET["name"]));
                 }
                 break;
+            case "getByDevice":
+                $data = json_encode($dbHandler->getByDevice($_GET["device"]));
+                break;
             case "getById":
                 $data = json_encode($dbHandler->getById($_GET["device"], $_GET["id"]));
                 break;
@@ -57,9 +60,9 @@
   }
   
     if($data == ''){
-        echo '{ msg: "Bad request, action not found" }';
+        echo '{ err: "Bad request, action not found", data: "" }';
     } else {
-        echo $data;
+        echo '{ err: "", data: ' . $data . ' }';
     }
   $dbHandler->disconnect();
 ?>
