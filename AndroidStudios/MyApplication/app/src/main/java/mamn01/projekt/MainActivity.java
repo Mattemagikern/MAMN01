@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
      * Redirect user to SettingsActivity
      */
     public void StartSettingsActivity(View v){
-        Intent i = new Intent(this, MainActivity.class); // TODO: Send to correct Activity class.
+        Intent i = new Intent(this, SettingsActivity.class); // TODO: Send to correct Activity class.
         startActivity(i);
     }
 

@@ -11,9 +11,6 @@
     <uses-permission android:name="android.Manifest.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
-    <!-- Google MAP API key -->
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ourloggo"
@@ -47,14 +44,7 @@
             android:name=".HugboardActivity"
             android:label="@string/hugboard"
             android:parentActivityName=".MainActivity" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value ="AIzaSyB6Hot8BW-x8wF4hwdPOekZFedu4Pcc9XI" />
@@ -66,6 +56,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mamn01.projekt.MainActivity" />
         </activity>
+        <activity android:name=".SettingsActivity"></activity>
+
     </application>
 
 </manifest>

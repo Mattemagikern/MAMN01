@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="YAAAAY!"
+        android:text="YAAAAY!\nWe found a match for you!"
         android:textSize="30sp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
