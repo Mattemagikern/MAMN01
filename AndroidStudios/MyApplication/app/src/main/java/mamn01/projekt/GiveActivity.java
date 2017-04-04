@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,13 +51,14 @@ public class GiveActivity extends ListActivity {
         String lng = String.valueOf(13.221007);
         String url = "http://shapeapp.se/mamn01/?action=getNearbyWanters&device=" + deviceId + "&lat=" + lat + "&lng=" + lng;
         final ArrayList<String> wanters = new ArrayList<String>();
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         try {
                             for(int i = 0; i < response.length(); i++){
-                                JSONObject o = (JSONObject) response.get(i);
+                                JSONArray data = (JSONArray) response.get("data");
+                                JSONObject o = (JSONObject) data.get(i);
                                 wanters.add(String.valueOf(i +1) + ". " + o.getString("name") + " är " + o.getString("distance") + " km bort");
                             }
                             setListAdapter(new ArrayAdapter<String>(GiveActivity.this,
