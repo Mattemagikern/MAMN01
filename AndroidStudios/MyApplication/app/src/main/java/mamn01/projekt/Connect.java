@@ -14,6 +14,7 @@ public class Connect extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connect);
+        //get id from other user -> send to Maps
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

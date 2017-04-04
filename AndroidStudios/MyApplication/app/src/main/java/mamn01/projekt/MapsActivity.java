@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap gMap;
 
@@ -74,7 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (myLocation == null) {
                 Criteria criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+                criteria.setAccuracy(Criteria.ACCURACY_FINE);
                 String provider = lm.getBestProvider(criteria, true);
                 myLocation = lm.getLastKnownLocation(provider);
             }
@@ -90,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .title("Hugger!"));
 
     }
+
     public void StarActivity(View v){
         Intent i = new Intent(this, StarActivity.class);
         startActivity(i);
@@ -99,5 +101,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent i = new Intent(this,PugActivity.class);
         startActivity(i);
         this.finish();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

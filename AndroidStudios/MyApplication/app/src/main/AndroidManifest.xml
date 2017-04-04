@@ -24,7 +24,7 @@
             android:name=".StarActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".Connect" />
-        <activity android:name=".Serching" />
+        <activity android:name=".Searching" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
