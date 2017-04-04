@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +23,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,22 +36,32 @@ import java.util.TimerTask;
  * Created by mattemagikern on 2017-04-02.
  */
 
-public class Serching extends AppCompatActivity  {
-    private ImageView spinner;
-    private TextView text;
+public class Serching extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
     private Timer Time;
+    private GoogleApiClient Gapi;
+    private Location location;
+    private String lat,lgn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.serching);
-        spinner = (ImageView) findViewById(R.id.spinner);
+
+       ImageView spinner = (ImageView) findViewById(R.id.spinner);
         // a nice text animation maybe?
-        text = (TextView) findViewById(R.id.text);
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.rotate);
         spinner.startAnimation(animation);
-        //Let's it spin for 5s, befor starting new activity
+        if (Gapi == null) {
+            Gapi = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
       final Timer t =  new Timer();
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -88,7 +103,38 @@ public class Serching extends AppCompatActivity  {
             }
         },0,2000);
     }
+    @Override
+    protected void onStart() {
+        Gapi.connect();
+        super.onStart();
+    }
+    @Override
+    protected void onStop(){
+        Gapi.disconnect();
+        super.onStop();
+    }
     public void CancelPressed(View v){
         finish();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        location = LocationServices.FusedLocationApi.getLastLocation(
+                Gapi);
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lgn = String.valueOf(location.getLongitude());
+        }
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
