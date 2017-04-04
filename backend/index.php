@@ -57,6 +57,9 @@
                 $data = json_encode($dbHandler->getByName($_GET["device"], $_GET["name"]));
                 break;
             case "matchMeUp":
+                // Set i want a hug.
+                $data = json_encode($dbHandler->wantHug($_GET["device"]));
+                
                 // Get my user object
                 $me = $dbHandler->getByDevice($_GET["device"]);
                 // Check if i am busy with someone
@@ -71,7 +74,7 @@
                         $dbHandler->setBusy($me['device'], $data['id']);
                         $dbHandler->setBusy($data['device'], $me['id']);
                     } else {
-                        $data = '';
+                        $data = '"No match"';
                     }
                 }
                 break;
@@ -81,6 +84,9 @@
     if($data == ''){
         echo '{ err: "Bad request, action not found", data: "" }';
     } else {
+        if($data =='null'){
+            $data = '""';
+        }
         echo '{ err: "", data: ' . $data . ' }';
     }
   $dbHandler->disconnect();

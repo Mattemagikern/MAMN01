@@ -58,7 +58,6 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:max="39"
-        android:progress="20"
         android:thumb="@drawable/logaliten"
         app:layout_constraintBottom_toTopOf="@+id/nameText"
         app:layout_constraintLeft_toLeftOf="parent"
