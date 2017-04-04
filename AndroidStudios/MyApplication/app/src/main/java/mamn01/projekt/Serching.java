@@ -31,10 +31,10 @@ import java.util.TimerTask;
  * Created by mattemagikern on 2017-04-02.
  */
 
-public class Serching extends AppCompatActivity {
+public class Serching extends AppCompatActivity  {
     private ImageView spinner;
     private TextView text;
-    private Handler handler;
+    private Timer Time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +47,13 @@ public class Serching extends AppCompatActivity {
                 R.anim.rotate);
         spinner.startAnimation(animation);
         //Let's it spin for 5s, befor starting new activity
-        new Timer().scheduleAtFixedRate(new TimerTask(){
+      final Timer t =  new Timer();
+        t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
                 String deviceId = Settings.Secure.getString(Serching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
+
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -64,6 +66,8 @@ public class Serching extends AppCompatActivity {
                                     Intent i = new Intent(Serching.this, Connect.class);
                                     i.putExtra("mymatch", data.toString());
                                     startActivity(i);
+                                    t.cancel();
+                                    t.purge();
                                     finish();
 
                                 } catch (Exception e) {
