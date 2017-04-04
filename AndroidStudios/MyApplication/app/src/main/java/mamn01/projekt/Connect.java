@@ -21,7 +21,7 @@ public class Connect extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        }, 3000);
+        }, 2000);
 
     }
 }
