@@ -50,7 +50,7 @@
     }
     public function getByDevice($device){
       $sql = "SELECT id, name, hugrange, hugpoints, lat, lng, wantsHug from mamn01__users WHERE device=?;";
-      $result = $this->db->executeQuery($sql, array($id));
+      $result = $this->db->executeQuery($sql, array($device));
       $this->log("getByDevice() -> " . json_encode($result), $device);
       return $result[0];
     }
@@ -66,16 +66,16 @@
       $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
     }
-    public function createUser($device, $name){
-      $sql = "INSERT INTO mamn01__users (name, device) values (?, ?);";
-      $result = $this->db->executeUpdate($sql, array($name, $device));
-      $this->log("createUser() -> " . json_encode($name), $device);
+    public function createUser($device, $name, $range){
+      $sql = "INSERT INTO mamn01__users (name, device, hugrange) values (?, ?, ?);";
+      $result = $this->db->executeUpdate($sql, array($name, $device, $range));
+      $this->log('createUser(' . $name . ', ' . $range . ')', $device);
       return count($result) != 0;
     }
-    public function updateName($device, $name){
-      $sql = "UPDATE mamn01__users SET name=? WHERE device=?;";
-      $result = $this->db->executeUpdate($sql, array($name, $device));
-      $this->log("updateName() -> " . json_encode($name), $device);
+    public function updateName($device, $name, $range){
+      $sql = "UPDATE mamn01__users SET name=?, hugrange=? WHERE device=?;";
+      $result = $this->db->executeUpdate($sql, array($name, $range, $device));
+      $this->log('updateName(' . $name . ', ' . $range . ')', $device);
       return $this->db->getLastId();
     }
     public function wantHug($device){
