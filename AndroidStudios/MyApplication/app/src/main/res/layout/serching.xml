@@ -26,7 +26,7 @@
         android:id="@+id/spinner"
         android:layout_width="268dp"
         android:layout_height="318dp"
-        app:srcCompat="@drawable/spinner"
+        app:srcCompat="@drawable/spinnerph"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
