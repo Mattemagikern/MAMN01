@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class Serching extends AppCompatActivity {
     private ImageView spinner;
     private TextView text;
-    private boolean handler;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +33,15 @@ public class Serching extends AppCompatActivity {
                 R.anim.rotate);
         spinner.startAnimation(animation);
         //Let's it spin for 5s, befor starting new activity
-        handler = new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(Serching.this, Connect.class);
-                startActivity(i);
-                finish();
+        handler = new Handler();
+
+        private Runnable updateData = new Runnable(){
+            public void run(){
+                //call the service here
+                ////// set the interval time here
+                handler.postDelayed(updateData,10000);
             }
-        }, 2000);
+        }
     }
 
 }
