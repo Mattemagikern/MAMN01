@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Timer;
@@ -57,7 +58,9 @@ public class Serching extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    JSONObject data = (JSONObject) response.get("data");
+
+                                    String dataStr = (String) response.get("data");
+                                    JSONObject data = new JSONObject(dataStr);
 
 
                                     Intent i = new Intent(Serching.this, Connect.class);
