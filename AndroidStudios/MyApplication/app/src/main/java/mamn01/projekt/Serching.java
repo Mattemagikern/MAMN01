@@ -58,10 +58,8 @@ public class Serching extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-
                                     String dataStr = (String) response.get("data");
                                     JSONObject data = new JSONObject(dataStr);
-
 
                                     Intent i = new Intent(Serching.this, Connect.class);
                                     i.putExtra("mymatch", data.toString());
