@@ -55,7 +55,7 @@
       return $result[0];
     }
     public function getById($device, $id){
-      $sql = "SELECT id, name, hugpoints, lat, lng, wantsHug from mamn01__users WHERE id=?;";
+      $sql = "SELECT id, device, name, hugrange, lat, lng from mamn01__users WHERE id=?;";
       $result = $this->db->executeQuery($sql, array($id));
       $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
@@ -91,7 +91,7 @@
       return $this->db->getLastId();
     }
     public function getNearbyWanters($device, $lat, $lng){
-      $sql = "SELECT id, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 HAVING distance < 2 ORDER BY distance;";
+      $sql = "SELECT id, device, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 ORDER BY distance;";
       $result = $this->db->executeQuery($sql, array($lat, $lng));
       $this->log("getNearbyWanters() -> " . json_encode($result), $device);
       return $result;
