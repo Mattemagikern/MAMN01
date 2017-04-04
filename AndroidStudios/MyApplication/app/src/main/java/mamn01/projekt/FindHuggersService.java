@@ -64,7 +64,7 @@ public class FindHuggersService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
-
+/*
     private void getMatches() {
         // Instantiate the RequestQueue.
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -94,4 +94,6 @@ public class FindHuggersService extends Service {
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
+    */
+
 }

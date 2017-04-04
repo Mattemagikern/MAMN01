@@ -48,14 +48,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap gMap) {
         try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = gMap.setMapStyle(new MapStyleOptions(getResources()
+                    .getString(R.string.mapis2)));
+
+            if (!success) {
+                Log.e("lol", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("lol", "Can't find style. Error: ", e);
+        }
+
 
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MapsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else{
-            if(!gMap.isMyLocationEnabled())
+            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            if (!gMap.isMyLocationEnabled())
                 gMap.setMyLocationEnabled(true);
 
-            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (myLocation == null) {
@@ -65,14 +77,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 myLocation = lm.getLastKnownLocation(provider);
             }
 
-            if(myLocation!=null){
+            if (myLocation != null) {
                 LatLng userLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14), 1500, null);
             }
         }
         //Some set of positions,for each pos in set, Do this: ##Template
-        LatLng LTH = new LatLng(55.7106442,13.2037933);
+        LatLng LTH = new LatLng(55.7106442, 13.2037933);
         gMap.addMarker(new MarkerOptions().position(LTH)
                 .title("Hugger!"));
+
     }
 }
