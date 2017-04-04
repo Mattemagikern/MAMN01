@@ -46,7 +46,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/holo_red_dark"
-        android:onClick="StarActivity"
+        android:onClick="PugActivity"
         android:paddingRight="26dp"
         android:text="HugFailed"
         android:textAlignment="textEnd"

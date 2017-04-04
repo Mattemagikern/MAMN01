@@ -21,5 +21,6 @@ public class StarActivity extends Activity {
     public void MainActivity(View v){
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+        finish();
     }
 }
