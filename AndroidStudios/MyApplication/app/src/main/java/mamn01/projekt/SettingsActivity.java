@@ -122,7 +122,8 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject data = (JSONObject) response.get("data");
+                            String dataStr = (String) response.get("data");
+                            JSONObject data = new JSONObject(dataStr);
                             String nme = data.getString("name");
                             int rng = Integer.parseInt(data.getString("hugrange"));
                             SettingsActivity.this.nameText.setText(nme);

@@ -51,7 +51,8 @@ public class HugboardActivity extends ListActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        JSONArray data = (JSONArray) response.get("data");
+                        String dataStr = (String) response.get("data");
+                        JSONArray data = new JSONArray(dataStr);
                         for(int i = 0; i < data.length(); i++){
                             JSONObject o = (JSONObject) data.get(i);
                             hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
