@@ -38,7 +38,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-
         rangeBar = (SeekBar) findViewById(R.id.rangeBar);
         rangeText = (TextView) findViewById(R.id.rangeText);
         nameText = (EditText) findViewById(R.id.nameText);
@@ -127,8 +126,9 @@ public class SettingsActivity extends AppCompatActivity {
                             String nme = data.getString("name");
                             int rng = Integer.parseInt(data.getString("hugrange"));
                             SettingsActivity.this.nameText.setText(nme);
+                            SettingsActivity.this.currentRange = rng;
                             SettingsActivity.this.setRange(rng);
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             System.out.println("Error: " + e.getMessage());
                         }
                     }
