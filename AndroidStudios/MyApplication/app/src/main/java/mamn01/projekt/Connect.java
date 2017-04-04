@@ -17,11 +17,11 @@ public class Connect extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(Connect.this, MainActivity.class);
+                Intent i = new Intent(Connect.this, MapsActivity.class);
                 startActivity(i);
                 finish();
             }
-        }, 5000);
+        }, 3000);
 
     }
 }

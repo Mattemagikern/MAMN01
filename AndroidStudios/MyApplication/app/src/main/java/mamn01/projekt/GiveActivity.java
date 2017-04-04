@@ -2,6 +2,17 @@ package mamn01.projekt;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.ArrayAdapter;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -14,6 +25,7 @@ public class GiveActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_give);
+        fetchNearbyWanters();
 
         /**
 
@@ -28,5 +40,38 @@ public class GiveActivity extends ListActivity {
         ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.content_give, give_example());
         list_view.setAdapter(adapter);
          */
+    }
+
+
+    private void fetchNearbyWanters() {
+        // Instantiate the RequestQueue.
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String lat = String.valueOf(55.704660);
+        String lng = String.valueOf(13.221007);
+        String url = "http://shapeapp.se/mamn01/?action=getNearbyWanters&device=" + deviceId + "&lat=" + lat + "&lng=" + lng;
+        final ArrayList<String> wanters = new ArrayList<String>();
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for(int i = 0; i < response.length(); i++){
+                                JSONObject o = (JSONObject) response.get(i);
+                                wanters.add(String.valueOf(i +1) + ". " + o.getString("name") + " är " + o.getString("distance") + " km bort");
+                            }
+                            setListAdapter(new ArrayAdapter<String>(GiveActivity.this,
+                                    android.R.layout.simple_list_item_1, wanters));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
