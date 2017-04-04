@@ -7,4 +7,153 @@
     <string name="title_activity_maps">Map</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
+    <string name="mapis2">
+     [
+  {
+    \"featureType\": \"administrative\",
+    \"stylers\": [
+      {
+        \"color\": \"#ffffff\"
+      },
+      {
+        \"hue\": \"#ff0000\"
+      },
+      {
+        \"visibility\": \"on\"
+      },
+      {
+        \"weight\": 0.4
+      }
+    ]
+  },
+  {
+    \"featureType\": \"landscape\",
+    \"stylers\": [
+      {
+        \"color\": \"#2b3f57\"
+      },
+      {
+        \"visibility\": \"simplified\"
+      },
+      {
+        \"weight\": 0.1
+      }
+    ]
+  },
+  {
+    \"featureType\": \"poi\",
+    \"stylers\": [
+      {
+        \"color\": \"#6c5b7b\"
+      }
+    ]
+  },
+  {
+    \"featureType\": \"poi\",
+    \"elementType\": \"labels\",
+    \"stylers\": [
+      {
+        \"visibility\": \"off\"
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.arterial\",
+    \"elementType\": \"geometry\",
+    \"stylers\": [
+      {
+        \"color\": \"#f55f77\"
+      },
+      {
+        \"weight\": 1.1
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.arterial\",
+    \"elementType\": \"labels\",
+    \"stylers\": [
+      {
+        \"color\": \"#ffffff\"
+      },
+      {
+        \"weight\": 0.7
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.highway\",
+    \"elementType\": \"geometry\",
+    \"stylers\": [
+      {
+        \"color\": \"#f55f77\"
+      },
+      {
+        \"weight\": 3
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.highway\",
+    \"elementType\": \"labels\",
+    \"stylers\": [
+      {
+        \"color\": \"#ffffff\"
+      },
+      {
+        \"weight\": 0.8
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.highway\",
+    \"elementType\": \"labels.text\",
+    \"stylers\": [
+      {
+        \"color\": \"#FFFFFF\"
+      },
+      {
+        \"weight\": 1.3
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.local\",
+    \"elementType\": \"geometry\",
+    \"stylers\": [
+      {
+        \"color\": \"#f55f77\"
+      },
+      {
+        \"weight\": 0.4
+      }
+    ]
+  },
+  {
+    \"featureType\": \"road.local\",
+    \"elementType\": \"labels\",
+    \"stylers\": [
+      {
+        \"visibility\": \"off\"
+      }
+    ]
+  },
+  {
+    \"featureType\": \"transit.line\",
+    \"stylers\": [
+      {
+        \"visibility\": \"on\"
+      }
+    ]
+  },
+  {
+    \"featureType\": \"water\",
+    \"stylers\": [
+      {
+        \"color\": \"#f3b191\"
+      }
+    ]
+  }
+]
+        </string>
 </resources>

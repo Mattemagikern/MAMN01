@@ -14,11 +14,11 @@ create table mamn01__users (
 	id			      integer auto_increment,
 	name 		      varchar(30) NOT NULL,
 	device  		  varchar(50) UNIQUE NOT NULL,
-	hugrange  		integer DEFAULT 10,
+	hugrange  		integer DEFAULT 2000,
 	hugpoints     integer DEFAULT 0,
 	lat           DECIMAL(10, 8) NOT NULL, 
 	lng           DECIMAL(11, 8) NOT NULL,
-	isBusy        bool DEFAULT 0,    
+	isBusy        integer DEFAULT 0,    
 	wantsHug      bool DEFAULT 0,    
 	isAdmin       bool DEFAULT 0,    
 	PRIMARY KEY (id)
