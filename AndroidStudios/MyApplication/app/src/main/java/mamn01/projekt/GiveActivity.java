@@ -56,8 +56,8 @@ public class GiveActivity extends ListActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            for(int i = 0; i < response.length(); i++){
-                                JSONArray data = (JSONArray) response.get("data");
+                            JSONArray data = (JSONArray) response.get("data");
+                            for(int i = 0; i < data.length(); i++){
                                 JSONObject o = (JSONObject) data.get(i);
                                 wanters.add(String.valueOf(i +1) + ". " + o.getString("name") + " är " + o.getString("distance") + " km bort");
                             }
