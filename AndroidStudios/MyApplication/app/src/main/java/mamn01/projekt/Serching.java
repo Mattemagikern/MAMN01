@@ -53,15 +53,18 @@ public class Serching extends AppCompatActivity  {
             public void run() {
                 String deviceId = Settings.Secure.getString(Serching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
-
-
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    String dataStr = (String) response.get("data");
-                                    JSONObject data = new JSONObject(dataStr);
+                                    JSONObject data;
+                                    try {
+                                        String dataStr = (String) response.get("data");
+                                        data = new JSONObject(dataStr);
+                                    } catch (Exception e) {
+                                        data = (JSONObject) response.getJSONObject("data");
+                                    }
 
                                     Intent i = new Intent(Serching.this, Connect.class);
                                     i.putExtra("mymatch", data.toString());
@@ -69,55 +72,23 @@ public class Serching extends AppCompatActivity  {
                                     t.cancel();
                                     t.purge();
                                     finish();
-
                                 } catch (Exception e) {
                                     System.out.println("Error: " + e.getMessage());
                                 }
                             }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Error: " + error.getMessage());
-                            }
-                        });
-            }
-        },0,500);
-    }
-    public void CancelPressed(View v){
-        finish();
-    }
 
 
-    private void matchMeUp() {
-        // Instantiate the RequestQueue.
-        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject data = (JSONObject) response.get("data");
-
-
-                            Intent i = new Intent(Serching.this, Connect.class);
-                            i.putExtra("mymatch", data.toString());
-                            startActivity(i);
-                            finish();
-
-                        } catch (Exception e) {
-                            matchMeUp();
-                            System.out.println("Error: " + e.getMessage());
-                        }
-                    }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         System.out.println("Error: " + error.getMessage());
                     }
                 });
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+                MySingleton.getInstance(Serching.this).addToRequestQueue(jsObjRequest);
+            }
+        },0,2000);
+    }
+    public void CancelPressed(View v){
+        finish();
     }
 }

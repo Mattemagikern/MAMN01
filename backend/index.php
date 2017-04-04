@@ -67,7 +67,9 @@
                     $data =$dbHandler->getById($_GET["device"], $me['isBusy']);
                 } else {
                     // Else try to match me up.
-                    $other = $dbHandler->matchMeUp($_GET["device"], $me['lat'], $me['lng'], $me['hugrange']);
+                    //$other = $dbHandler->matchMeUp($_GET["device"], $me['lat'], $me['lng'], $me['hugrange']);
+                    // While testing
+                    $other = $dbHandler->getNearbyWanters($_GET["device"], $_GET["lat"], $_GET["lng"]);
                     if(count($other) > 0){
                         // If match found, set us as busy.
                         $data = $other[0];

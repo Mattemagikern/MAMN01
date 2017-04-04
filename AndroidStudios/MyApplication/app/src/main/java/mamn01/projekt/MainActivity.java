@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
      * Redirect user to GiveActivity
      */
     public void StartGiveActivity(View v){
-        Intent i = new Intent(this, GiveActivity.class); // TODO: Send to correct Activity class.
+        Intent i = new Intent(this, MapsActivity.class); // TODO: Send to correct Activity class.
         startActivity(i);
     }
 
