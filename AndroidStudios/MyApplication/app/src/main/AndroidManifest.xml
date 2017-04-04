@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.Manifest.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.Manifest.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -47,7 +47,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value ="AIzaSyB6Hot8BW-x8wF4hwdPOekZFedu4Pcc9XI" />
+            android:value="AIzaSyB6Hot8BW-x8wF4hwdPOekZFedu4Pcc9XI" />
 
         <activity
             android:name=".MapsActivity"
@@ -56,8 +56,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mamn01.projekt.MainActivity" />
         </activity>
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
 
+        <service
+            android:name=".FindHuggersService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
