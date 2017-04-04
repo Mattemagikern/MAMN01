@@ -2,6 +2,7 @@ package mamn01.projekt;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,7 +17,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONObject;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -42,8 +46,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        gMap = googleMap;
+    public void onMapReady(GoogleMap gMap) {
+        try {
+
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }else{
@@ -67,8 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         //Some set of positions,for each pos in set, Do this: ##Template
         LatLng LTH = new LatLng(55.7106442,13.2037933);
-        googleMap.addMarker(new MarkerOptions().position(LTH)
+        gMap.addMarker(new MarkerOptions().position(LTH)
                 .title("Hugger!"));
-
     }
 }
