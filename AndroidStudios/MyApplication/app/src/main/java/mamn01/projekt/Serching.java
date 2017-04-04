@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,6 +14,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
 
 /**
  * Created by mattemagikern on 2017-04-02.
@@ -36,6 +44,9 @@ public class Serching extends AppCompatActivity {
         //Let's it spin for 5s, befor starting new activity
         handler = new Handler();
 
+
+        matchMeUp();
+        /*
         private Runnable updateData = new Runnable(){
             public void run(){
                 //call the service here
@@ -43,10 +54,45 @@ public class Serching extends AppCompatActivity {
                 handler.postDelayed(updateData,10000);
             }
         }
+        */
     }
 
     public void CancelPressed(View v){
         finish();
+    }
+
+
+    private void matchMeUp() {
+        // Instantiate the RequestQueue.
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject data = (JSONObject) response.get("data");
+
+
+                            Intent i = new Intent(Serching.this, Connect.class);
+                            i.putExtra("mymatch", data.toString());
+                            startActivity(i);
+                            finish();
+
+                        } catch (Exception e) {
+                            matchMeUp();
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
 }
