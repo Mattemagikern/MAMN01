@@ -8,6 +8,8 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,5 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14), 1500, null);
             }
         }
+        //Some set of positions,for each pos in set, Do this: ##Template
+        LatLng LTH = new LatLng(55.7106442,13.2037933);
+        googleMap.addMarker(new MarkerOptions().position(LTH)
+                .title("Hugger!"));
+
     }
 }
