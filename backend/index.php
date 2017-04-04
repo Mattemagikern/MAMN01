@@ -64,14 +64,14 @@
                 $me = $dbHandler->getByDevice($_GET["device"]);
                 // Check if i am busy with someone
                 if($me['isBusy'] > 0){
-                    $data =$dbHandler->getById($me['isBusy']);
+                    $data =$dbHandler->getById($_GET["device"], $me['isBusy']);
                 } else {
                     // Else try to match me up.
                     $other = $dbHandler->matchMeUp($_GET["device"], $me['lat'], $me['lng'], $me['hugrange']);
                     if(count($other) > 0){
                         // If match found, set us as busy.
                         $data = $other[0];
-                        $dbHandler->setBusy($me['device'], $data['id']);
+                        $dbHandler->setBusy($_GET['device'], $data['id']);
                         $dbHandler->setBusy($data['device'], $me['id']);
                     } else {
                         $data = '"No match"';
@@ -87,7 +87,7 @@
         if($data =='null'){
             $data = '""';
         }
-        echo '{ err: "", data: ' . $data . ' }';
+        echo '{ err: "", data: ' . json_encode($data) . ' }';
     }
   $dbHandler->disconnect();
 ?>

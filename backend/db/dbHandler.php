@@ -49,7 +49,7 @@
       return $result[0];
     }
     public function getByDevice($device){
-      $sql = "SELECT id, name, hugrange, hugpoints, lat, lng, wantsHug from mamn01__users WHERE device=?;";
+      $sql = "SELECT id, name, hugrange, hugpoints, lat, lng, wantsHug, isBusy from mamn01__users WHERE device=?;";
       $result = $this->db->executeQuery($sql, array($device));
       $this->log("getByDevice() -> " . json_encode($result), $device);
       return $result[0];
@@ -98,8 +98,8 @@
     }
 
     public function matchMeUp($device, $lat, $lng, $myrange){
-      $sql = "SELECT id, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 AND isBusy=0 HAVING distance < (hugrange / 1000) AND distance < (? / 1000) ORDER BY distance LIMIT 1;";
-      $result = $this->db->executeQuery($sql, array($lat, $lng, $myrange));
+      $sql = "SELECT id, device, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 AND isBusy=0 AND device!=? HAVING distance < (hugrange / 1000) AND distance < (? / 1000) ORDER BY distance LIMIT 1;";
+      $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myrange));
       $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
       return $result;
     }
