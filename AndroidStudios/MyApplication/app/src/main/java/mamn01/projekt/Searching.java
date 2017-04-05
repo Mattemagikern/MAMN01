@@ -34,6 +34,7 @@ public class Searching extends AppCompatActivity implements
     private GoogleApiClient Gapi;
     private Location location;
     private String lat,lgn;
+    private Timer t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class Searching extends AppCompatActivity implements
                     .build();
         }
 
-      final Timer t =  new Timer();
+        t =  new Timer();
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
@@ -93,6 +94,7 @@ public class Searching extends AppCompatActivity implements
             }
         },2000,4000);
     }
+
     @Override
     protected void onStart() {
         Gapi.connect();
@@ -104,6 +106,8 @@ public class Searching extends AppCompatActivity implements
         super.onStop();
     }
     public void CancelPressed(View v){
+        t.cancel();
+        t.purge();
         finish();
     }
 
