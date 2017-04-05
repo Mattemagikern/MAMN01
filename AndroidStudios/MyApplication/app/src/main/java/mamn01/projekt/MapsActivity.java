@@ -155,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         //move map camera
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        gMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        gMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         //stop location updates
         if (gCli != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);

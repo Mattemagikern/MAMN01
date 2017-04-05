@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     public void StartGiveActivity(View v){
         Intent i = new Intent(this, MapsActivity.class); // TODO: Send to correct Activity class.
         startActivity(i);
+
     }
 
     /*

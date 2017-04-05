@@ -91,7 +91,7 @@ public class Searching extends AppCompatActivity implements
                 });
                 MySingleton.getInstance(Searching.this).addToRequestQueue(jsObjRequest);
             }
-        },0,2000);
+        },2000,4000);
     }
     @Override
     protected void onStart() {

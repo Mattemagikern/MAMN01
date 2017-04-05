@@ -14,8 +14,6 @@ public class PugActivity extends AppCompatActivity {
     }
 
     public void BackToMain(View v){
-        Intent i = new Intent(this,MainActivity.class);
-        startActivity(i);
         this.finish();
     }
 }
