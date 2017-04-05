@@ -1,41 +1,60 @@
 package mamn01.projekt;
 
-import android.content.Context;
 import android.content.Intent;
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+import java.util.Timer;
+import java.util.TimerTask;
 
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private GoogleMap gMap;
+    private GoogleApiClient gCli;
+    private Marker Counterpart;
+    private LocationRequest locReq;
+    private Location loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        checkLocationPermission();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Log.d("onCreate","Done!");
     }
 
 
@@ -48,48 +67,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap gMap) {
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = gMap.setMapStyle(new MapStyleOptions(getResources()
-                    .getString(R.string.mapis2)));
-
-            if (!success) {
-                Log.e("lol", "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e("lol", "Can't find style. Error: ", e);
+        this.gMap = gMap;
+        gMap.setMapStyle(new MapStyleOptions(getResources()
+                .getString(R.string.mapis2)));
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            buildGoogleApiClient();
+            gMap.setMyLocationEnabled(true);
+        }else{
+            buildGoogleApiClient();
+            gMap.setMyLocationEnabled(true);
         }
+        Log.d("OnMapReady","Done!");
+      /*  final Timer t =  new Timer();
+        t.scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run() {
+                String deviceId = Settings.Secure.getString(Searching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONObject data;
+                                    try {
+                                        String dataStr = (String) response.get("data");
+                                        data = new JSONObject(dataStr);
+
+                                        LatLng latLng = new LatLng(data);
+                                        MarkerOptions markerOptions = new MarkerOptions();
+                                        markerOptions.position(latLng);
+                                        markerOptions.title("Current Position");
+                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                                        Counterpart = gMap.addMarker(markerOptions);
+
+                                    } catch (Exception e) {
+                                        data = (JSONObject) response.getJSONObject("data");
+                                    }
+                                    t.cancel();
+                                    t.purge();
+                                    finish();
+                                } catch (Exception e) {
+                                    System.out.println("Error: " + e.getMessage());
+                                }
+                            }
 
 
-        if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        } else {
-            if (!gMap.isMyLocationEnabled())
-                gMap.setMyLocationEnabled(true);
-
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            if (myLocation == null) {
-                Criteria criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_FINE);
-                String provider = lm.getBestProvider(criteria, true);
-                myLocation = lm.getLastKnownLocation(provider);
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                System.out.println("Error: " + error.getMessage());
+                            }
+                        });
+                MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
             }
+        },0,5000);
+        */
+    }
 
-            if (myLocation != null) {
-                LatLng userLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14), 1500, null);
-            }
-        }
-        //Some set of positions,for each pos in set, Do this: ##Template
-        LatLng LTH = new LatLng(55.7106442, 13.2037933);
-        gMap.addMarker(new MarkerOptions().position(LTH)
-                .title("Hugger!"));
-
+    protected synchronized void buildGoogleApiClient() {
+        gCli = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        gCli.connect();
     }
 
     public void StarActivity(View v){
@@ -102,24 +149,102 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(i);
         this.finish();
     }
-
     @Override
     public void onLocationChanged(Location location) {
-        
+        loc = location;
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        //move map camera
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        gMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        //stop location updates
+        if (gCli != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
+        }
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    public void onConnected(Bundle bundle) {
+        locReq = new LocationRequest();
+        locReq.setInterval(1000);
+        locReq.setFastestInterval(1000);
+        locReq.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(gCli, locReq, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    // permission was granted. Do the
+                    // contacts-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (gCli == null) {
+                            buildGoogleApiClient();
+                        }
+                        gMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on this permission.
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other permissions this app might request.
+            // You can add here other case statements according to your requirement.
+        }
     }
+
 }
