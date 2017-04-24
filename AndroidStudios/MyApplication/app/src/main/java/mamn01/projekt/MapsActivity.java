@@ -1,11 +1,14 @@
 package mamn01.projekt;
 
+import android.content.Context;
 import android.content.Intent;
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;
@@ -46,6 +50,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker Counterpart;
     private LocationRequest locReq;
     private Location loc;
+    private String matchId;
+    private MarkerOptions markerOptions;
+    private double inc = 0.0004;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Log.d("onCreate","Done!");
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
+        Log.d("Get Match ", mymatch);
+        try {
+            JSONObject match = new JSONObject(mymatch);
+
+            matchId = match.getString("id");
+            double lat = match.getDouble("lat");
+            double lng = match.getDouble("lng");
+            markerOptions = new MarkerOptions();
+            markerOptions.position(new LatLng(lat, lng));
+            markerOptions.title("Hugger");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            finish();
+        }
     }
 
 
@@ -69,8 +95,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
     @Override
-    public void onMapReady(GoogleMap gMap) {
+    public void onMapReady(final GoogleMap gMap) {
         this.gMap = gMap;
+        Counterpart = gMap.addMarker(markerOptions);
         gMap.setMapStyle(new MapStyleOptions(getResources()
                 .getString(R.string.mapis2)));
         if (ContextCompat.checkSelfPermission(this,
@@ -83,12 +110,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             gMap.setMyLocationEnabled(true);
         }
         Log.d("OnMapReady","Done!");
-      /*  final Timer t =  new Timer();
+        final Timer t =  new Timer();
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                String deviceId = Settings.Secure.getString(SearchingActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
-                String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
+                String deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
@@ -99,25 +126,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         String dataStr = (String) response.get("data");
                                         data = new JSONObject(dataStr);
 
-                                        LatLng latLng = new LatLng(data);
-                                        MarkerOptions markerOptions = new MarkerOptions();
-                                        markerOptions.position(latLng);
-                                        markerOptions.title("Current Position");
-                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                                        Counterpart = gMap.addMarker(markerOptions);
+                                        double lat = data.getDouble("lat");
+                                        double lng = data.getDouble("lng");
+                                        lat += inc;
+                                        inc -= 0.004;
+                                        Counterpart.setPosition(new LatLng(lat,lng));
 
                                     } catch (Exception e) {
-                                        data = (JSONObject) response.getJSONObject("data");
+                                        e.printStackTrace();
                                     }
-                                    t.cancel();
-                                    t.purge();
-                                    finish();
                                 } catch (Exception e) {
                                     System.out.println("Error: " + e.getMessage());
                                 }
                             }
-
-
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
@@ -126,8 +147,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         });
                 MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
             }
-        },0,5000);
-        */
+        },0,3000);
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -162,6 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @SuppressWarnings("MissingPermission")
     @Override
     public void onConnected(Bundle bundle) {
         locReq = new LocationRequest();

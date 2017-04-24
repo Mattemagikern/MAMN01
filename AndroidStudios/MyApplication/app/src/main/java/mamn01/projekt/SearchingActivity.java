@@ -1,9 +1,12 @@
 package mamn01.projekt;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -72,8 +75,14 @@ public class SearchingActivity extends AppCompatActivity implements
                                         data = (JSONObject) response.getJSONObject("data");
                                     }
 
+                                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("mymatch", data.toString());
+                                    editor.commit();
+                                    Log.d("MATCH FOUND: ", data.toString());
+
+
                                     Intent i = new Intent(SearchingActivity.this, ConnectActivity.class);
-                                    i.putExtra("mymatch", data.toString());
                                     startActivity(i);
                                     t.cancel();
                                     t.purge();
