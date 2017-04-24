@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
  * Created by mattemagikern on 2017-04-02.
  */
 
-public class Connect extends AppCompatActivity {
+public class ConnectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +18,7 @@ public class Connect extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(Connect.this, MapsActivity.class);
+                Intent i = new Intent(ConnectActivity.this, MapsActivity.class);
                 startActivity(i);
                 finish();
             }

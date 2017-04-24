@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
      * Redirect user to WantActivity
      */
     public void StartWantActivity(View v){
-        Intent i = new Intent(this, Searching.class); // TODO: Send to correct Activity class.
+        Intent i = new Intent(this, SearchingActivity.class); // TODO: Send to correct Activity class.
         startActivity(i);
     }
 

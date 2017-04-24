@@ -87,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                String deviceId = Settings.Secure.getString(Searching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String deviceId = Settings.Secure.getString(SearchingActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

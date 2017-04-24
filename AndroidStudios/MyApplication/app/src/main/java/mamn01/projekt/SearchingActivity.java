@@ -27,7 +27,7 @@ import java.util.TimerTask;
  * Created by mattemagikern on 2017-04-02.
  */
 
-public class Searching extends AppCompatActivity implements
+public class SearchingActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private Timer Time;
@@ -57,7 +57,7 @@ public class Searching extends AppCompatActivity implements
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                String deviceId = Settings.Secure.getString(Searching.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String deviceId = Settings.Secure.getString(SearchingActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -72,7 +72,7 @@ public class Searching extends AppCompatActivity implements
                                         data = (JSONObject) response.getJSONObject("data");
                                     }
 
-                                    Intent i = new Intent(Searching.this, Connect.class);
+                                    Intent i = new Intent(SearchingActivity.this, ConnectActivity.class);
                                     i.putExtra("mymatch", data.toString());
                                     startActivity(i);
                                     t.cancel();
@@ -90,7 +90,7 @@ public class Searching extends AppCompatActivity implements
                         System.out.println("Error: " + error.getMessage());
                     }
                 });
-                MySingleton.getInstance(Searching.this).addToRequestQueue(jsObjRequest);
+                MySingleton.getInstance(SearchingActivity.this).addToRequestQueue(jsObjRequest);
             }
         },2000,4000);
     }
