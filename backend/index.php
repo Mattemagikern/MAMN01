@@ -37,6 +37,18 @@
             case "updateCoordinate":
                 $data = json_encode($dbHandler->updateCoordinate($_GET["device"], $_GET["lat"], $_GET["lng"]));
                 break;
+            case "giveHugpoint":
+                $data = json_encode($dbHandler->giveHugPoint($_GET["device"], $_GET["id"]));
+                break;
+            case "hugccess":
+                $me = $dbHandler->getByDevice($_GET["device"]);
+                $dbHandler->giveHugPoint($_GET["device"], $_GET["other"]);
+                $dbHandler->giveHugPoint($_GET["device"], $me["id"]);
+                $dbHandler->setHugccessById($_GET["device"], $_GET['other']);
+                $dbHandler->setHugccessById($_GET["device"], $me['id']);
+                $dbHandler->hugAdded($_GET["device"], $me['id'], $_GET['other']);
+                $data = "Hugccess is a fact";
+                break;
             case "createUser":
                 $data = json_encode($dbHandler->createUser($_GET["device"], $_GET["name"]));
                 break;
@@ -67,7 +79,7 @@
                     $data =$dbHandler->getById($_GET["device"], $me['isBusy']);
                 } else {
                     // Else try to match me up.
-                    //$other = $dbHandler->matchMeUp($_GET["device"], $me['lat'], $me['lng'], $me['hugrange']);
+                    //$other = $dbHandler->matchMeUp($_GET["device"], $me['id'], $me['lat'], $me['lng'], $me['hugrange']);
                     // While testing
                     $other = $dbHandler->getNearbyWanters($_GET["device"], $_GET["lat"], $_GET["lng"]);
                     if(count($other) > 0){
