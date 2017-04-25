@@ -55,13 +55,13 @@
       return $result[0];
     }
     public function getById($device, $id){
-      $sql = "SELECT id, device, name, hugrange, lat, lng from mamn01__users WHERE id=?;";
+      $sql = "SELECT id, device, name, hugrange, lat, lng, hugfailed, hugccess, lost from mamn01__users WHERE id=?;";
       $result = $this->db->executeQuery($sql, array($id));
       $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
     }
     public function getCoordinate($device, $id){
-      $sql = "SELECT lat, lng from mamn01__users WHERE id=?;";
+      $sql = "SELECT lat, lng, hugfailed, hugccess, lost from mamn01__users WHERE id=?;";
       $result = $this->db->executeQuery($sql, array($id));
       $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
@@ -79,7 +79,7 @@
       return $this->db->getLastId();
     }
     public function wantHug($device){
-      $sql = "UPDATE mamn01__users SET wantsHug=1 WHERE device=?;";
+      $sql = "UPDATE mamn01__users SET wantsHug=1 AND hugccess=0 AND hugfailed=0 AND lost=0 WHERE device=?;";
       $result = $this->db->executeUpdate($sql, array($device));
       $this->log("wantHug() -> ", $device);
       return $this->db->getLastId();
@@ -99,7 +99,10 @@
           hugrange, 
           lat, 
           lng, 
-          SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance 
+          SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance,
+          hugfailed,
+          hugccess,
+          lost
         FROM 
           mamn01__users 
         WHERE 
@@ -156,7 +159,7 @@ EOT;
       return $this->db->getLastId();
     }
     public function setHugccessById($device, $id){
-      $sql = "UPDATE mamn01__users SET isBusy=0 AND wantsHug=0 WHERE id=?;";
+      $sql = "UPDATE mamn01__users SET isBusy=0 AND wantsHug=0 AND hugccess=1 WHERE id=?;";
       $result = $this->db->executeUpdate($sql, array($id));
       $this->log("setHugccessById(" . $id . ") -> ", $device);
       return $this->db->getLastId();
