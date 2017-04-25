@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar rangeBar;
     private TextView rangeText;
     private EditText nameText;
+    private Button cancelButton;
+    private Button updateButton;
 
     private int minRange = 100;
     private int currentRange = 2000;
@@ -40,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        cancelButton = (Button) findViewById(R.id.button6);
+        updateButton = (Button) findViewById(R.id.button5);
         rangeBar = (SeekBar) findViewById(R.id.rangeBar);
         rangeText = (TextView) findViewById(R.id.rangeText);
         nameText = (EditText) findViewById(R.id.nameText);
@@ -139,7 +144,9 @@ public class SettingsActivity extends AppCompatActivity {
                             SettingsActivity.this.currentRange = rng;
                             SettingsActivity.this.setRange(rng);
                         } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
+                            cancelButton.setEnabled(true);
+                            cancelButton.setVisibility(View.INVISIBLE);
+                            updateButton.setText("Create Profile");
                         }
                     }
                 }, new Response.ErrorListener() {
