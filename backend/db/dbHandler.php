@@ -106,7 +106,7 @@
               lat, 
               lng, 
               SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance 
-        FROM mamn01__users 
+        FROM mamn01__users as u 
         WHERE 
           wantsHug=1 
         AND 
@@ -117,9 +117,9 @@
           NOT EXISTS (
             SELECT  * FROM mamn01__hugs 
               WHERE 
-                hugger=id AND hugged=? AND DATE(hug_date) = CURDATE()
+                hugger=u.id AND hugged=? AND DATE(hug_date) = CURDATE()
               OR 
-                hugger=? AND hugged=id AND DATE(hug_date) = CURDATE()
+                hugger=? AND hugged=u.id AND DATE(hug_date) = CURDATE()
           ) 
         HAVING distance < (hugrange / 1000) AND distance < (? / 1000) 
         ORDER BY distance LIMIT 1;
@@ -148,7 +148,7 @@
     }
     public function giveHugpoint($device, $id){
       $sql = "UPDATE mamn01__users SET hugpoints=hugpoints+1 WHERE id=?;";
-      $result = $this->db->executeUpdate($sql, array($id, $device));
+      $result = $this->db->executeUpdate($sql, array($id));
       $this->log("giveHugPoint(" . $id . ") -> ", $device);
       return $this->db->getLastId();
     }
