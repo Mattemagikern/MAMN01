@@ -53,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String matchId;
     private MarkerOptions markerOptions;
     private double inc = 0.0004;
+    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Log.d("onCreate","Done!");
+        deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
@@ -114,7 +117,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                String deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -125,7 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     try {
                                         String dataStr = (String) response.get("data");
                                         data = new JSONObject(dataStr);
-
                                         double lat = data.getDouble("lat");
                                         double lng = data.getDouble("lng");
                                         lat += inc;
@@ -177,6 +178,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //move map camera
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         gMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        //send to database
+        String url = "http://shapeapp.se/mamn01/?action=updateCoordinate&device=" + deviceId + "&lat=" + location.getLatitude() + "&lng=" + location.getLongitude();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            try {
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+        MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
         //stop location updates
         if (gCli != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
