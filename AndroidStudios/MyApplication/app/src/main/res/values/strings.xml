@@ -27,6 +27,33 @@
     ]
   },
   {
+    \"featureType\": \"all\",
+    \"elementType\": \"labels\",
+    \"stylers\": [
+      {
+        \"weight\": \"1\"
+      }
+    ]
+  },
+        {
+    \"featureType\": \"all\",
+    \"elementType\": \"labels.text.stroke\",
+    \"stylers\": [
+      {
+        \"visibility\": \"off\"
+      }
+    ]
+  },
+        {
+    \"featureType\": \"all\",
+    \"elementType\": \"labels.text.fill\",
+    \"stylers\": [
+      {
+        \"weight\": \"1\"
+      }
+    ]
+  },
+  {
     \"featureType\": \"landscape\",
     \"stylers\": [
       {
@@ -89,7 +116,7 @@
         \"color\": \"#f55f77\"
       },
       {
-        \"weight\": 3
+        \"weight\": 1
       }
     ]
   },
@@ -113,7 +140,7 @@
         \"color\": \"#FFFFFF\"
       },
       {
-        \"weight\": 1.3
+        \"weight\": 1.0
       }
     ]
   },
@@ -150,7 +177,7 @@
     \"featureType\": \"water\",
     \"stylers\": [
       {
-        \"color\": \"#f3b191\"
+        \"color\": \"#31A899\"
       }
     ]
   }
