@@ -384,4 +384,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
+
+    }
 }
