@@ -163,17 +163,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 LatLng otherPos = new LatLng(lat, lng);
                                 LatLng myPos = new LatLng(myLat, myLong);
-                                double dKm = CalculationByDistance(otherPos, myPos);
+                                double prev_dKm = dKm;
+                                dKm = CalculationByDistance(otherPos, myPos);
                                 // Make other go towards us.
-                                double steps = 2;
+                                double steps = 4;
+
                                 if(testMode && myLat != 0.0 && dKm > 0.3) {
                                     dLat = dLat + (myLat - lat) / steps;
                                     dLong = dLong + (myLong - lng) / steps;
                                     lat = lat + (dLat);
                                     lng = lng + (dLong);
+                                    prev_dKm = dKm;
                                     dKm = dKm - (x * dKm / steps);
+                                    if(x == 1 && test_mode_wrong_direction){
+                                        tmp_dLat = dLat;
+                                        tmp_dLong = dLong;
+                                        tmp_lat = lat;
+                                        tmp_lng = lng;
+                                        tmp_dKm = dKm;
+                                    } else if(x == 3 && test_mode_wrong_direction){
+                                        test_mode_wrong_direction = false;
+                                        prev_dKm = dKm;
+                                        dKm = dKm + (x * dKm / steps);
+                                        dLat = tmp_dLat;
+                                        dLong = tmp_dLong;
+                                        lat = tmp_lat;
+                                        lng = tmp_lng;
+                                        x = 1;
+                                    }
                                     x++;
                                 }
+
+                                if (prev_dKm > dKm && dKm > 0.3 && dKm < 1.0){
+                                    MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                    getCloser.start();
+                                }
+
+                                if (prev_dKm < dKm && dKm > 0.3 && dKm < 2.0){
+                                    MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
+                                    getFurther.start();
+                                }
+
                                 // Update position
                                 if(!testMode || dKm > 0.3 ) {
                                     Counterpart.setPosition(new LatLng(lat, lng));
@@ -181,10 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     ifVibrate = true;
                                     hasGottenClose = true;
                                 }
-                                if (dKm > 0.3 && dKm < 1.0){
-                                    MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
-                                    getCloser.start();
-                                }
+
                                 if(ifVibrate){
                                     long[] pattern = {0, 500, 1000, 500};
                                     vibrator.vibrate(pattern,-1);
