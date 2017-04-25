@@ -6,10 +6,12 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -156,6 +158,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             Counterpart.setPosition(new LatLng(lat, lng));
                                         }
 
+                                        if (x == steps - 1){
+                                            MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                            getCloser.start();
+                                        }
+
                                         if (x == steps){
                                             ifVibrate = true;
                                         }
@@ -166,10 +173,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             ifVibrate =  false;
                                         }
 
-                                        // Checks distance
-//                                        if ((myLat - lat < 0.000001) && (myLong - lng < 0.000001)){
-//                                            ifVibrate = true;
-//                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
