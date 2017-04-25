@@ -79,7 +79,7 @@
       return $this->db->getLastId();
     }
     public function wantHug($device){
-      $sql = "UPDATE mamn01__users SET wantsHug=1 AND hugccess=0 AND hugfailed=0 AND lost=0 WHERE device=?;";
+      $sql = "UPDATE mamn01__users SET wantsHug=1, hugccess=0, hugfailed=0, lost=0 WHERE device=?;";
       $result = $this->db->executeUpdate($sql, array($device));
       $this->log("wantHug() -> ", $device);
       return $this->db->getLastId();
@@ -159,9 +159,15 @@ EOT;
       return $this->db->getLastId();
     }
     public function setHugccessById($device, $id){
-      $sql = "UPDATE mamn01__users SET isBusy=0 AND wantsHug=0 AND hugccess=1 WHERE id=?;";
+      $sql = "UPDATE mamn01__users SET isBusy=0, wantsHug=0, hugccess=1 WHERE id=?;";
       $result = $this->db->executeUpdate($sql, array($id));
       $this->log("setHugccessById(" . $id . ") -> ", $device);
+      return $this->db->getLastId();
+    }
+    public function setHugfailed($device, $id){
+      $sql = "UPDATE mamn01__users SET isBusy=0, wantsHug=0, hugfailed=1 WHERE id=?;";
+      $result = $this->db->executeUpdate($sql, array($id));
+      $this->log("setHugfailed(" . $id . ") -> ", $device);
       return $this->db->getLastId();
     }
     public function giveHugpoint($device, $id){

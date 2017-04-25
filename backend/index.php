@@ -40,6 +40,12 @@
             case "giveHugpoint":
                 $data = json_encode($dbHandler->giveHugPoint($_GET["device"], $_GET["id"]));
                 break;
+            case "hugfailed":
+                $me = $dbHandler->getByDevice($_GET["device"]);
+                $dbHandler->setHugfailed($_GET["device"], $_GET['other']);
+                $dbHandler->setHugfailed($_GET["device"], $me['id']);
+                $data = "HugFailed is a fact";
+                break;
             case "hugccess":
                 $me = $dbHandler->getByDevice($_GET["device"]);
                 $dbHandler->giveHugPoint($_GET["device"], $_GET["other"]);
