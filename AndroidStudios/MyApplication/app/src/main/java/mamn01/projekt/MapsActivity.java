@@ -53,6 +53,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String matchId;
     private MarkerOptions markerOptions;
     private double inc = 0.0004;
+    private double myLat = 0.0;
+    private double myLong = 0.0;
+    private double dLat = 0.0;
+    private double dLong = 0.0;
+    private int x = 0;
     private String deviceId;
 
     @Override
@@ -129,10 +134,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         data = new JSONObject(dataStr);
                                         double lat = data.getDouble("lat");
                                         double lng = data.getDouble("lng");
-                                        lat += inc;
-                                        inc -= 0.004;
-                                        Counterpart.setPosition(new LatLng(lat,lng));
 
+                                        // Make other go towards us.
+                                        double steps = 3;
+                                        if(myLat != 0.0) {
+                                            dLat = dLat + (myLat - lat) / steps;
+                                            dLong = dLong + (myLong - lng) / steps;
+                                            lat = lat + (dLat);
+                                            lng = lng + (dLong);
+                                            x++;
+                                        }
+                                        // Update position
+                                        if(x <= steps) {
+                                            Counterpart.setPosition(new LatLng(lat, lng));
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -174,12 +189,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         loc = location;
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        myLat = location.getLatitude();
+        myLong = location.getLongitude();
+        LatLng latLng = new LatLng(myLat, myLong);
         //move map camera
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         gMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         //send to database
-        String url = "http://shapeapp.se/mamn01/?action=updateCoordinate&device=" + deviceId + "&lat=" + location.getLatitude() + "&lng=" + location.getLongitude();
+        String url = "http://shapeapp.se/mamn01/?action=updateCoordinate&device=" + deviceId + "&lat=" + myLat + "&lng=" + myLong;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
