@@ -56,12 +56,6 @@
                 />
         </activity>
         <activity android:name=".SettingsActivity" />
-        <service
-            android:name=".FindHuggersService"
-            android:enabled="true"
-            android:exported="true">
-
-        </service>
     </application>
 
 </manifest>
