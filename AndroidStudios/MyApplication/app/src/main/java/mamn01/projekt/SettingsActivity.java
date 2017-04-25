@@ -21,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -94,21 +96,28 @@ public class SettingsActivity extends AppCompatActivity {
     private void updateProfileOnBackend(String name, String range) {
         // Instantiate the RequestQueue.
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        String url = "http://shapeapp.se/mamn01/?action=updateName&device=" + deviceId + "&name=" + name + "&range=" + range;
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        SettingsActivity.this.finish();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("Error: " + error.getMessage());
-                    }
-                });
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+        String urlString = "http://shapeapp.se/mamn01/?action=updateName&device=" + deviceId + "&name=" + name + "&range=" + range;
+        URL myURL = null;
+        try {
+            myURL = new URL(urlString);
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, myURL.toString(), null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            SettingsActivity.this.finish();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println("Error: " + error.getMessage());
+                        }
+                    });
+            // Access the RequestQueue through your singleton class.
+            MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
