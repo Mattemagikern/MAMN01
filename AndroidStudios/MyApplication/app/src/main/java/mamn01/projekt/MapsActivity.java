@@ -6,10 +6,12 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -170,7 +172,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             ifVibrate = true;
                                             hasGottenClose = true;
                                         }
-
+                                        if (dKm > 0.3 && dKm < 1.0){
+                                            MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                            getCloser.start();
+                                        }
                                         if(ifVibrate){
                                             long[] pattern = {0, 500, 1000, 500};
                                             vibrator.vibrate(pattern,-1);
@@ -179,7 +184,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                         // Enable hugccess if close
                                         hugButtonEnabler(dKm);
-
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
