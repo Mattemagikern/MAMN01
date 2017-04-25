@@ -62,7 +62,7 @@ public class HugboardActivity extends ListActivity {
                             hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
                         }
                         setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
-                                android.R.layout.simple_list_item_1, hugboard));
+                                R.layout.hugboard_row, hugboard));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
