@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.location.Location;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -249,7 +246,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void StarActivity(View v){
-        Intent i = new Intent(this, StarActivity.class);
+        Intent i = new Intent(this, SplendidActivity.class);
         startActivity(i);
         this.finish();
     }

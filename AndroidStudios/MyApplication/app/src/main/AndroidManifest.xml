@@ -20,7 +20,7 @@
         android:theme="@style/Theme.AppCompat">
         <activity android:name=".PugActivity" />
         <activity
-            android:name=".StarActivity"
+            android:name=".SplendidActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".ConnectActivity" />
         <activity android:name=".SearchingActivity" />
