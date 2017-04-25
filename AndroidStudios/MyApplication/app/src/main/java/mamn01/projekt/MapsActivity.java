@@ -73,6 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean hasGottenClose = false;
     boolean test_mode_wrong_direction = true;
     private double dKm = 0;
+    private double tmp_dLat = 0, tmp_dLong = 0, tmp_lat = 0, tmp_lng = 0, tmp_dKm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +170,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             lat = lat + (dLat);
                                             lng = lng + (dLong);
                                             dKm = dKm - (x * dKm / steps);
+
+
+
+                                            if (x == 1 && test_mode_wrong_direction){
+                                                tmp_dLat = dLat;
+                                                tmp_dLong = dLong;
+                                                tmp_lat = lat;
+                                                tmp_lng = lng;
+                                                tmp_dKm = dKm;
+                                            } else if (x == 3 && test_mode_wrong_direction){
+                                                test_mode_wrong_direction = false;
+                                                dLat = tmp_dLat;
+                                                dLong = tmp_dLong;
+                                                lat = tmp_lat;
+                                                lng = tmp_lng;
+                                                dKm = tmp_dKm;
+                                                x = 1;
+                                            }
+
                                             x++;
                                         }
 
@@ -190,7 +210,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         if (prev_dkm < dKm && dKm > 0.3 && dKm < 1.0){
                                             MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
                                             getFurther.start();
-                                            hasGottenClose = false;
                                         }
                                         if(ifVibrate){
                                             long[] pattern = {0, 500, 1000, 500};
