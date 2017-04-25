@@ -59,7 +59,7 @@ public class HugboardActivity extends ListActivity {
                         JSONArray data = new JSONArray(dataStr);
                         for(int i = 0; i < data.length(); i++){
                             JSONObject o = (JSONObject) data.get(i);
-                            hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
+                            hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + " points");
                         }
                         setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
                                 R.layout.hugboard_row, hugboard));
