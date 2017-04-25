@@ -2,8 +2,8 @@ package mamn01.projekt;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.graphics.Color;
+
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+
 
 public class MainActivity extends AppCompatActivity {
     Button score , search, settings;

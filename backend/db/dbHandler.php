@@ -97,11 +97,42 @@
       return $result;
     }
 
-    public function matchMeUp($device, $lat, $lng, $myrange){
-      $sql = "SELECT id, device, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 AND isBusy=0 AND device!=? HAVING distance < (hugrange / 1000) AND distance < (? / 1000) ORDER BY distance LIMIT 1;";
-      $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myrange));
+    public function matchMeUp($device, $myid, $lat, $lng, $myrange){
+      $sql = <<<'EOT'
+      SELECT  id, 
+              device, 
+              name, 
+              hugrange, 
+              lat, 
+              lng, 
+              SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance 
+        FROM mamn01__users 
+        WHERE 
+          wantsHug=1 
+        AND 
+          isBusy=0 
+        AND 
+          device!=? 
+        AND 
+          NOT EXISTS (
+            SELECT  * FROM mamn01__hugs 
+              WHERE 
+                hugger=id AND hugged=? AND DATE(hug_date) = CURDATE()
+              OR 
+                hugger=? AND hugged=id AND DATE(hug_date) = CURDATE()
+          ) 
+        HAVING distance < (hugrange / 1000) AND distance < (? / 1000) 
+        ORDER BY distance LIMIT 1;
+      EOT;
+      $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myid, $myid, $myrange));
       $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
       return $result;
+    }
+    public function hugAdded($device, $myid, $otherid){
+      $sql = "INSERT INTO mamn01__hugs (hugger, hugged, hug_date) values (?,?,NOW());";
+      $result = $this->db->executeUpdate($sql, array($myid, $otherid));
+      $this->log('hugAdded(' . $myid . ', ' . $otherid . ')', $device);
+      return count($result) != 0;
     }
     public function setBusy($device, $id){
       $sql = "UPDATE mamn01__users SET isBusy=? WHERE device=?;";
@@ -109,7 +140,18 @@
       $this->log("setBusy(" . $id . ") -> ", $device);
       return $this->db->getLastId();
     }
-
+    public function setHugccessById($device, $id){
+      $sql = "UPDATE mamn01__users SET isBusy=0 AND wantsHug=0 WHERE id=?;";
+      $result = $this->db->executeUpdate($sql, array($id));
+      $this->log("setHugccessById(" . $id . ") -> ", $device);
+      return $this->db->getLastId();
+    }
+    public function giveHugpoint($device, $id){
+      $sql = "UPDATE mamn01__users SET hugpoints=hugpoints+1 WHERE id=?;";
+      $result = $this->db->executeUpdate($sql, array($id, $device));
+      $this->log("giveHugPoint(" . $id . ") -> ", $device);
+      return $this->db->getLastId();
+    }
     
   
     // Log

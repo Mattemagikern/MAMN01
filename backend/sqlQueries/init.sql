@@ -24,6 +24,15 @@ create table mamn01__users (
 	PRIMARY KEY (id)
 );
 
+select 'Create hugs' as '';
+create table mamn01__hugs (
+	id			      integer auto_increment,
+	hugger 		    integer NOT NULL,
+	hugged 		    integer NOT NULL,
+	hug_date      DATE,
+	PRIMARY KEY (id)
+);
+
 select 'Create log' as '';
 create table mamn01__log (
 	id			  integer auto_increment,

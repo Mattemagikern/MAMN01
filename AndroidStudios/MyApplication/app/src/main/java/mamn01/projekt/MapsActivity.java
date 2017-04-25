@@ -6,8 +6,14 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -44,7 +50,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, SensorEventListener {
     private GoogleMap gMap;
     private GoogleApiClient gCli;
     private Marker Counterpart;
@@ -59,11 +65,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double dLong = 0.0;
     private int x = 0;
     private String deviceId;
+    private Vibrator vibrator;
+    boolean ifVibrate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         checkLocationPermission();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -148,6 +157,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         if(x <= steps) {
                                             Counterpart.setPosition(new LatLng(lat, lng));
                                         }
+
+                                        if (x == steps - 1){
+                                            MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                            getCloser.start();
+                                        }
+
+                                        if (x == steps){
+                                            ifVibrate = true;
+                                        }
+
+                                        if(ifVibrate){
+                                            long[] pattern = {0, 500, 1000, 500};
+                                            vibrator.vibrate(pattern,-1);
+                                            ifVibrate =  false;
+                                        }
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -309,4 +334,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
