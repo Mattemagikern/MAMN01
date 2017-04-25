@@ -91,7 +91,22 @@
       return $this->db->getLastId();
     }
     public function getNearbyWanters($device, $lat, $lng){
-      $sql = "SELECT id, device, name, hugrange, lat, lng, SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance FROM mamn01__users WHERE wantsHug=1 ORDER BY distance;";
+      $sql = <<<'EOT'
+        SELECT 
+          id, 
+          device, 
+          name, 
+          hugrange, 
+          lat, 
+          lng, 
+          SQRT(POW(69.1 * (lat - ?), 2) +POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance 
+        FROM 
+          mamn01__users 
+        WHERE 
+          wantsHug=1 
+        ORDER BY 
+          distance;
+EOT;
       $result = $this->db->executeQuery($sql, array($lat, $lng));
       $this->log("getNearbyWanters() -> " . json_encode($result), $device);
       return $result;
@@ -123,7 +138,7 @@
           ) 
         HAVING distance < (hugrange / 1000) AND distance < (? / 1000) 
         ORDER BY distance LIMIT 1;
-      EOT;
+EOT;
       $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myid, $myid, $myrange));
       $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
       return $result;

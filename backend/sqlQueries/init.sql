@@ -20,6 +20,9 @@ create table mamn01__users (
 	lng           DECIMAL(11, 8) NOT NULL,
 	isBusy        integer DEFAULT 0,    
 	wantsHug      bool DEFAULT 0,    
+	hugfailed     bool DEFAULT 0,    
+	hugccess      bool DEFAULT 0,    
+	lost          bool DEFAULT 0,    
 	isAdmin       bool DEFAULT 0,    
 	PRIMARY KEY (id)
 );
