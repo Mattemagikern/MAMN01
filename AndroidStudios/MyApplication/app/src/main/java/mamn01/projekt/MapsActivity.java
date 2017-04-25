@@ -157,6 +157,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             try {
                                 String dataStr = (String) response.get("data");
                                 data = new JSONObject(dataStr);
+
+                                // Use these to create awesome app.
+                                boolean hugfailed = 1 == data.getInt("hugfailed");
+                                boolean hugccess = 1 == data.getInt("hugccess");
+                                boolean lost = 1 == data.getInt("lost");
+
+                                if(hugccess){
+                                    finish();
+                                }
+                                if(hugfailed){
+                                    PugActivity(null);
+                                }
+                                if(lost){
+                                    otherIsLost();
+                                }
+
                                 double lat = data.getDouble("lat");
                                 double lng = data.getDouble("lng");
                                 boolean testMode = true; // TODO: Set to false when live
@@ -234,6 +250,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
         MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
+    }
+
+    private void otherIsLost() {
+        //TODO: Implement something cool. Like flash or vibration.
+
     }
 
     private void hugButtonEnabler(double dKm) {
