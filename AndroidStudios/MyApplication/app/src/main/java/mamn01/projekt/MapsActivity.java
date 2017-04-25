@@ -71,6 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean ifVibrate = false;
     private Button hugccessButton;
     private boolean hasGottenClose = false;
+    boolean test_mode_wrong_direction = true;
+    private double dKm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,9 +156,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                         LatLng otherPos = new LatLng(lat, lng);
                                         LatLng myPos = new LatLng(myLat, myLong);
-                                        double dKm = CalculationByDistance(otherPos, myPos);
+                                        double prev_dkm = dKm;
+                                        dKm = CalculationByDistance(otherPos, myPos);
                                         // Make other go towards us.
-                                        double steps = 2;
+                                        double steps = 4;
+
+
+                                        //Go to a correct direction
                                         if(testMode && myLat != 0.0 && dKm > 0.3) {
                                             dLat = dLat + (myLat - lat) / steps;
                                             dLong = dLong + (myLong - lng) / steps;
@@ -165,6 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             dKm = dKm - (x * dKm / steps);
                                             x++;
                                         }
+
                                         // Update position
                                         if(!testMode || dKm > 0.3 ) {
                                             Counterpart.setPosition(new LatLng(lat, lng));
@@ -172,9 +179,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             ifVibrate = true;
                                             hasGottenClose = true;
                                         }
-                                        if (dKm > 0.3 && dKm < 1.0){
+
+                                        //Correct direction sound feedback
+                                        if (prev_dkm > dKm && dKm > 0.3 && dKm < 1.0){
                                             MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
                                             getCloser.start();
+                                        }
+                                        
+                                        //Wrong direction sound feedback
+                                        if (prev_dkm < dKm && dKm > 0.3 && dKm < 1.0){
+                                            MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
+                                            getFurther.start();
+                                            hasGottenClose = false;
                                         }
                                         if(ifVibrate){
                                             long[] pattern = {0, 500, 1000, 500};
