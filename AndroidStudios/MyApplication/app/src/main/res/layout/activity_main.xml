@@ -10,7 +10,7 @@
     >
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_dark"
@@ -19,14 +19,12 @@
         android:textStyle="bold"
         android:text="Start HugSearch!"
         android:textColor="@color/white"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button3" />
-
+        app:layout_constraintBottom_toTopOf="@+id/score" />
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="361dp"
         android:layout_height="165dp"
         android:layout_marginEnd="24dp"
@@ -39,10 +37,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logga"
-        app:layout_constraintHorizontal_bias="0.48" />
+        app:layout_constraintHorizontal_bias="0.44"
+        android:id="@+id/imageView" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/score"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_light"
@@ -51,20 +50,19 @@
         android:onClick="StartHugboardActivity"
         android:text="HugBoard"
         android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button4" />
+        app:layout_constraintBottom_toTopOf="@+id/settings" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/settings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textStyle="bold"
         android:background="@color/Gold"
-        android:onClick="StartSettingsActivity"
         android:text="Settings"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,16 +74,15 @@
         android:id="@+id/textView3"
         android:layout_width="352dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:onClick="StartWantActivity"
         android:text="Welcome to HappyApp! \n Get your hugpants on!"
         android:textSize="10pt"
-        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/search" />
 </android.support.constraint.ConstraintLayout>

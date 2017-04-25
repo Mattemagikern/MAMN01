@@ -1,14 +1,22 @@
 package mamn01.projekt;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.SoundEffectConstants;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
+
 public class MainActivity extends AppCompatActivity {
+    Button score , search, settings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,42 +24,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        settings = (Button) findViewById(R.id.settings);
+        search = (Button) findViewById(R.id.search);
+        score = (Button) findViewById(R.id.score);
 
-    }
+        settings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.playSoundEffect(SoundEffectConstants.CLICK);
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class); //
+                startActivity(i);
+            }
+        });
 
-    /*
-     * Redirect user to GiveActivity
-     */
-    public void StartGiveActivity(View v){
-        Intent i = new Intent(this, MapsActivity.class); // TODO: Send to correct Activity class.
-        startActivity(i);
-
-    }
-
-    /*
-     * Redirect user to SettingsActivity
-     */
-    public void StartSettingsActivity(View v){
-        Intent i = new Intent(this, SettingsActivity.class); // TODO: Send to correct Activity class.
-        startActivity(i);
-    }
-
-
-    /*
-     * Redirect user to WantActivity
-     */
-    public void StartWantActivity(View v){
-        Intent i = new Intent(this, SearchingActivity.class); // TODO: Send to correct Activity class.
-        startActivity(i);
-    }
-
-
-    /*
-     * Redirect user to HugboardActivity
-     */
-    public void StartHugboardActivity(View v){
-        Intent i = new Intent(this, HugboardActivity.class);
-        startActivity(i);
+        search.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.playSoundEffect(SoundEffectConstants.CLICK);
+                Intent i = new Intent(MainActivity.this, SearchingActivity.class); //
+                startActivity(i);
+            }
+        });
+        score.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.playSoundEffect(SoundEffectConstants.CLICK);
+                Intent i = new Intent(MainActivity.this, HugboardActivity.class); //
+                startActivity(i);
+            }
+        });
     }
 
 
