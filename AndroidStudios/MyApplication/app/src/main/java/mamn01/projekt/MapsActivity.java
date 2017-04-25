@@ -71,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean ifVibrate = false;
     private Button hugccessButton;
     private boolean hasGottenClose = false;
+    private Timer t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,73 +135,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             gMap.setMyLocationEnabled(true);
         }
         Log.d("OnMapReady","Done!");
-        final Timer t =  new Timer();
+        t = new Timer();
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId;
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    JSONObject data;
-                                    try {
-                                        String dataStr = (String) response.get("data");
-                                        data = new JSONObject(dataStr);
-                                        double lat = data.getDouble("lat");
-                                        double lng = data.getDouble("lng");
-                                        boolean testMode = true; // TODO: Set to false when live
-
-                                        LatLng otherPos = new LatLng(lat, lng);
-                                        LatLng myPos = new LatLng(myLat, myLong);
-                                        double dKm = CalculationByDistance(otherPos, myPos);
-                                        // Make other go towards us.
-                                        double steps = 2;
-                                        if(testMode && myLat != 0.0 && dKm > 0.3) {
-                                            dLat = dLat + (myLat - lat) / steps;
-                                            dLong = dLong + (myLong - lng) / steps;
-                                            lat = lat + (dLat);
-                                            lng = lng + (dLong);
-                                            dKm = dKm - (x * dKm / steps);
-                                            x++;
-                                        }
-                                        // Update position
-                                        if(!testMode || dKm > 0.3 ) {
-                                            Counterpart.setPosition(new LatLng(lat, lng));
-                                        } else if(hasGottenClose == false){
-                                            ifVibrate = true;
-                                            hasGottenClose = true;
-                                        }
-                                        if (dKm > 0.3 && dKm < 1.0){
-                                            MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
-                                            getCloser.start();
-                                        }
-                                        if(ifVibrate){
-                                            long[] pattern = {0, 500, 1000, 500};
-                                            vibrator.vibrate(pattern,-1);
-                                            ifVibrate =  false;
-                                        }
-
-                                        // Enable hugccess if close
-                                        hugButtonEnabler(dKm);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("Error: " + e.getMessage());
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Error: " + error.getMessage());
-                            }
-                        });
-                MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
+                positionFetched();
             }
         },0,3000);
 
+    }
+
+    private void positionFetched() {
+        String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId;
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject data;
+                            try {
+                                String dataStr = (String) response.get("data");
+                                data = new JSONObject(dataStr);
+                                double lat = data.getDouble("lat");
+                                double lng = data.getDouble("lng");
+                                boolean testMode = true; // TODO: Set to false when live
+
+                                LatLng otherPos = new LatLng(lat, lng);
+                                LatLng myPos = new LatLng(myLat, myLong);
+                                double dKm = CalculationByDistance(otherPos, myPos);
+                                // Make other go towards us.
+                                double steps = 2;
+                                if(testMode && myLat != 0.0 && dKm > 0.3) {
+                                    dLat = dLat + (myLat - lat) / steps;
+                                    dLong = dLong + (myLong - lng) / steps;
+                                    lat = lat + (dLat);
+                                    lng = lng + (dLong);
+                                    dKm = dKm - (x * dKm / steps);
+                                    x++;
+                                }
+                                // Update position
+                                if(!testMode || dKm > 0.3 ) {
+                                    Counterpart.setPosition(new LatLng(lat, lng));
+                                } else if(hasGottenClose == false){
+                                    ifVibrate = true;
+                                    hasGottenClose = true;
+                                }
+                                if (dKm > 0.3 && dKm < 1.0){
+                                    MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                    getCloser.start();
+                                }
+                                if(ifVibrate){
+                                    long[] pattern = {0, 500, 1000, 500};
+                                    vibrator.vibrate(pattern,-1);
+                                    ifVibrate =  false;
+                                }
+
+                                // Enable hugccess if close
+                                hugButtonEnabler(dKm);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+        MySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsObjRequest);
     }
 
     private void hugButtonEnabler(double dKm) {
@@ -383,11 +388,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+
+
     }
+
     @Override
     protected void onPause(){
         super.onPause();
         LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
-
+        t.cancel();
     }
 }
