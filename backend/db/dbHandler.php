@@ -63,7 +63,7 @@
     public function getCoordinate($device, $id){
       $sql = "SELECT lat, lng, hugfailed, hugccess, lost from mamn01__users WHERE id=?;";
       $result = $this->db->executeQuery($sql, array($id));
-      $this->log("getById(" . $id . ") -> " . json_encode($result), $device);
+      $this->log("getCoordinate(" . $id . ") -> " . json_encode($result), $device);
       return $result[0];
     }
     public function createUser($device, $name, $range){

@@ -2,9 +2,12 @@
   session_start(); 
   require_once 'db/dbHandler.php';
   $dbHandler = new DatabaseHandler();
-  
   $data = '';
   // All endpoints for users (multiple users)
+
+  // TODO:
+  // Change to FALSE in PRODUCTION!!!!!
+  $testMode = true;  
  
   if( $_GET["device"]){
         switch ($_GET["action"]){
@@ -42,15 +45,19 @@
                 break;
             case "hugfailed":
                 $me = $dbHandler->getByDevice($_GET["device"]);
-                $dbHandler->setHugfailed($_GET["device"], $_GET['other']);
+                if($_GET["other"] != "1"){
+                  $dbHandler->setHugfailed($_GET["device"], $_GET['other']);
+                }
                 $dbHandler->setHugfailed($_GET["device"], $me['id']);
                 $data = "HugFailed is a fact";
                 break;
             case "hugccess":
                 $me = $dbHandler->getByDevice($_GET["device"]);
-                $dbHandler->giveHugPoint($_GET["device"], $_GET["other"]);
+                if($_GET["other"] != "1"){
+                  $dbHandler->giveHugPoint($_GET["device"], $_GET["other"]);
+                  $dbHandler->setHugccessById($_GET["device"], $_GET['other']);
+                }
                 $dbHandler->giveHugPoint($_GET["device"], $me["id"]);
-                $dbHandler->setHugccessById($_GET["device"], $_GET['other']);
                 $dbHandler->setHugccessById($_GET["device"], $me['id']);
                 $dbHandler->hugAdded($_GET["device"], $me['id'], $_GET['other']);
                 $data = "Hugccess is a fact";
@@ -85,9 +92,11 @@
                     $data =$dbHandler->getById($_GET["device"], $me['isBusy']);
                 } else {
                     // Else try to match me up.
-                    //$other = $dbHandler->matchMeUp($_GET["device"], $me['id'], $me['lat'], $me['lng'], $me['hugrange']);
-                    // While testing
-                    $other = $dbHandler->getNearbyWanters($_GET["device"], $_GET["lat"], $_GET["lng"]);
+                    if($testMode){
+                      $other = $dbHandler->getById($_GET["device"], "1");
+                    }else{
+                      $other = $dbHandler->matchMeUp($_GET["device"], $me['id'], $me['lat'], $me['lng'], $me['hugrange']);
+                    }
                     if(count($other) > 0){
                         // If match found, set us as busy.
                         $data = $other[0];
