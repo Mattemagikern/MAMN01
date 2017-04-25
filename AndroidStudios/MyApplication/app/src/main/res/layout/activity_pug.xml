@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mamn01.projekt.PugActivity">
+    tools:context="mamn01.projekt.PugActivity"
+    android:background="@color/Cornsilk">
 
     <TextView
         android:id="@+id/textView2"
@@ -15,6 +16,7 @@
         android:layout_marginTop="8dp"
         android:text="Why no hug? Have a Pug!"
         android:textSize="24sp"
+        android:textColor="@color/Coral"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,14 +25,15 @@
 
     <Button
         android:id="@+id/button8"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:background="@android:color/holo_green_light"
+        android:textStyle="bold"
+        android:background="@android:color/holo_orange_dark"
         android:onClick="BackToMain"
         android:text="Back to start"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,5 +49,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:srcCompat="@drawable/newpug"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintVertical_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/Cornsilk">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="YAAAAY!\nWe found a match for you!"
+        android:gravity="center"
+        android:textColor="@color/Coral"
         android:textSize="30sp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"

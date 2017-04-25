@@ -23,16 +23,19 @@ import java.util.ArrayList;
 
 public class HugboardActivity extends ListActivity {
 
-
-
-
-
+    private boolean isPaused;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        isPaused = false;
         fetchHugBoard();
     }
 
@@ -50,6 +53,8 @@ public class HugboardActivity extends ListActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
+                        if(isPaused)
+                            return;
                         String dataStr = (String) response.get("data");
                         JSONArray data = new JSONArray(dataStr);
                         for(int i = 0; i < data.length(); i++){
@@ -57,7 +62,7 @@ public class HugboardActivity extends ListActivity {
                             hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + "points");
                         }
                         setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
-                                android.R.layout.simple_list_item_1, hugboard));
+                                R.layout.hugboard_row, hugboard));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -76,5 +81,10 @@ public class HugboardActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         //String item = (String) getListAdapter().getItem(position);
         //Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();;
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        isPaused = true;
     }
 }

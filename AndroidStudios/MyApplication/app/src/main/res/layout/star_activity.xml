@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/Cornsilk">
 
 
     <ImageView
@@ -31,7 +32,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@android:color/holo_green_dark"
+        android:background="@android:color/holo_orange_dark"
+        android:textStyle="bold"
         android:onClick="MainActivity"
         android:text="Splendid!"
         app:layout_constraintBottom_toBottomOf="parent"

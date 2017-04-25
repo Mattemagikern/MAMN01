@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:background="@color/Cornsilk"
    >
 
     <fragment
@@ -25,7 +26,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@android:color/holo_green_dark"
+        android:textStyle="bold"
+        android:background="@android:color/holo_orange_dark"
         android:onClick="StarActivity"
         android:paddingLeft="26dp"
         android:text="Hugccsess"
@@ -45,7 +47,8 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@android:color/holo_red_dark"
+        android:textStyle="bold"
+        android:background="@android:color/darker_gray"
         android:onClick="PugActivity"
         android:paddingRight="26dp"
         android:text="HugFailed"

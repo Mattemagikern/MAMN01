@@ -19,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
         <activity android:name=".PugActivity" />
-        <activity android:name=".GiveActivity" />
         <activity
             android:name=".StarActivity"
             android:theme="@style/Theme.AppCompat" />
@@ -57,12 +56,6 @@
                 />
         </activity>
         <activity android:name=".SettingsActivity" />
-        <service
-            android:name=".FindHuggersService"
-            android:enabled="true"
-            android:exported="true">
-
-        </service>
     </application>
 
 </manifest>
