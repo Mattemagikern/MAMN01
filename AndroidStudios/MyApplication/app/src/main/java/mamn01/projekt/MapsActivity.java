@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -44,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,6 +67,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String deviceId;
     private Vibrator vibrator;
     boolean ifVibrate = false;
+    private Button hugccessButton;
+    private boolean hasGottenClose = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         Log.d("onCreate","Done!");
         deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        hugccessButton = (Button) findViewById(R.id.acc);
+        hugccessButton.setEnabled(false);
 
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -141,23 +148,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         data = new JSONObject(dataStr);
                                         double lat = data.getDouble("lat");
                                         double lng = data.getDouble("lng");
+                                        boolean testMode = true; // TODO: Set to false when live
 
+                                        LatLng otherPos = new LatLng(lat, lng);
+                                        LatLng myPos = new LatLng(myLat, myLong);
+                                        double dKm = CalculationByDistance(otherPos, myPos);
                                         // Make other go towards us.
-                                        double steps = 3;
-                                        if(myLat != 0.0) {
+                                        double steps = 2;
+                                        if(testMode && myLat != 0.0 && dKm > 0.3) {
                                             dLat = dLat + (myLat - lat) / steps;
                                             dLong = dLong + (myLong - lng) / steps;
                                             lat = lat + (dLat);
                                             lng = lng + (dLong);
+                                            dKm = dKm - (x * dKm / steps);
                                             x++;
                                         }
                                         // Update position
-                                        if(x <= steps) {
+                                        if(!testMode || dKm > 0.3 ) {
                                             Counterpart.setPosition(new LatLng(lat, lng));
-                                        }
-
-                                        if (x == steps){
+                                        } else if(hasGottenClose == false){
                                             ifVibrate = true;
+                                            hasGottenClose = true;
                                         }
 
                                         if(ifVibrate){
@@ -166,10 +177,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             ifVibrate =  false;
                                         }
 
-                                        // Checks distance
-//                                        if ((myLat - lat < 0.000001) && (myLong - lng < 0.000001)){
-//                                            ifVibrate = true;
-//                                        }
+                                        // Enable hugccess if close
+                                        hugButtonEnabler(dKm);
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -187,6 +197,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         },0,3000);
 
+    }
+
+    private void hugButtonEnabler(double dKm) {
+        double rangeLimit = 0.3;
+        boolean hugEnable = dKm < rangeLimit;
+        hugccessButton.setEnabled(hugEnable);
+    }
+
+    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+
+        return Radius * c;
     }
 
     protected synchronized void buildGoogleApiClient() {
