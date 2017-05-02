@@ -177,7 +177,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 double lat = data.getDouble("lat");
                                 double lng = data.getDouble("lng");
-                                boolean testMode = true; // TODO: Set to false when live
 
                                 LatLng otherPos = new LatLng(lat, lng);
                                 LatLng myPos = new LatLng(myLat, myLong);
