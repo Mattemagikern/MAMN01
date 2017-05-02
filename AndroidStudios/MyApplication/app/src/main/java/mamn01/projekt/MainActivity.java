@@ -14,7 +14,6 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button score , search, settings;
-    private AudioManager am;
     private MediaPlayer mp;
 
 
@@ -23,9 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mp = MediaPlayer.create(this, R.raw.wiii);
-        am.playSoundEffect(SoundEffectConstants.CLICK);
         setSupportActionBar(toolbar);
 
         settings = (Button) findViewById(R.id.settings);
