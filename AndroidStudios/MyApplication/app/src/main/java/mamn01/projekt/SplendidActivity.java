@@ -42,7 +42,6 @@ public class SplendidActivity extends Activity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
         try {
-            mp.start();
             JSONObject match = new JSONObject(mymatch);
             matchId = match.getString("id");
             setHugccess();
@@ -65,6 +64,7 @@ public class SplendidActivity extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
                         // TODO: Nothing to do, nothing to see.
+                        mp.start();
                         hugpoint.setText("You just got a hugpoint!");
                         splendidButton.setEnabled(true);
 

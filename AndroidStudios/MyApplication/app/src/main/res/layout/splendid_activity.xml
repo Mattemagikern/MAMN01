@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/splendid"
-        android:layout_width="368dp"
+        android:layout_width="0dp"
         android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
@@ -62,7 +62,7 @@
 
     <Button
         android:id="@+id/sendfeed"
-        android:layout_width="368dp"
+        android:layout_width="0dp"
         android:layout_height="67dp"
         android:text="Send us feedback"
         android:textStyle="bold"
