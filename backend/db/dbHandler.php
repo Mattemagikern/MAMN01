@@ -131,6 +131,10 @@ EOT;
           isBusy=0 
         AND 
           device!=? 
+        HAVING distance < (hugrange / 1000) AND distance < (? / 1000) 
+        ORDER BY distance LIMIT 1;
+EOT;
+/* Removed for testing
         AND 
           NOT EXISTS (
             SELECT  * FROM mamn01__hugs 
@@ -139,9 +143,7 @@ EOT;
               OR 
                 hugger=? AND hugged=u.id AND DATE(hug_date) = CURDATE()
           ) 
-        HAVING distance < (hugrange / 1000) AND distance < (? / 1000) 
-        ORDER BY distance LIMIT 1;
-EOT;
+*/
       $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myid, $myid, $myrange));
       $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
       return $result;
