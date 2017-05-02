@@ -46,6 +46,7 @@ public class SplendidActivity extends Activity {
                 Uri uri = Uri.parse("https://docs.google.com/forms/d/e/1FAIpQLScOxHPrA1jpefeMmVBQbBrtEVvjpPvkxJ9Y74E6Ypnf8fdgVA/viewform?usp=sf_link");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+                finish();
             }
         });
 
