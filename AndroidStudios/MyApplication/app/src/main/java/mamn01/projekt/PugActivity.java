@@ -2,6 +2,7 @@ package mamn01.projekt;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +23,13 @@ public class PugActivity extends AppCompatActivity {
 
     private String matchId;
     private Button pugButton;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pug);
-
+        mp = MediaPlayer.create(this, R.raw.sadtrombone);
         pugButton = (Button) findViewById(R.id.pugButton);
         pugButton.setEnabled(false);
 
@@ -55,6 +57,7 @@ public class PugActivity extends AppCompatActivity {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        mp.start();
                         pugButton.setEnabled(true);
                     }
                 }, new Response.ErrorListener() {
