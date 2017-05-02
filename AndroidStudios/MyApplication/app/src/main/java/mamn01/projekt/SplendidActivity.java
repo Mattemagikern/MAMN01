@@ -2,11 +2,13 @@ package mamn01.projekt;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,18 +25,24 @@ public class SplendidActivity extends Activity {
 
     private String matchId;
     private Button splendidButton;
+    private Button feedbackButton;
+    private TextView hugpoint;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splendid_activity);
-
+        mp = MediaPlayer.create(this, R.raw.wiii);
         splendidButton = (Button) findViewById(R.id.splendid);
+        feedbackButton = (Button) findViewById(R.id.sendfeed);
+        feedbackButton.setVisibility(View.INVISIBLE);
         splendidButton.setEnabled(false);
-
+        hugpoint= (TextView) findViewById(R.id.hugpoint1);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
         try {
+            mp.start();
             JSONObject match = new JSONObject(mymatch);
             matchId = match.getString("id");
             setHugccess();
@@ -57,12 +65,16 @@ public class SplendidActivity extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
                         // TODO: Nothing to do, nothing to see.
+                        hugpoint.setText("You just got a hugpoint!");
                         splendidButton.setEnabled(true);
 
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        feedbackButton.setVisibility(View.VISIBLE);
+                        splendidButton.setText("No Thanks, Go back to Start");
+                        hugpoint.setText("Something went wrong due to connection issues");
                         System.out.println("Error: " + error.getMessage());
                     }
                 });
