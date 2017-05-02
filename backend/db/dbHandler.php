@@ -143,8 +143,9 @@ EOT;
               OR 
                 hugger=? AND hugged=u.id AND DATE(hug_date) = CURDATE()
           ) 
-*/
       $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myid, $myid, $myrange));
+*/
+      $result = $this->db->executeQuery($sql, array($lat, $lng, $device, $myrange));
       $this->log("matchMeUp(" . $lat . ", " . $lng .  ", " . $myrange . ") -> " . json_encode($result), $device);
       return $result;
     }

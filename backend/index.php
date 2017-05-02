@@ -6,7 +6,7 @@
   // All endpoints for users (multiple users)
 
   // Check if phone is in testmode
-  $testMode = $_GET['testmode'];
+  $testMode = $_GET['testmode'] != 'false';
  
   if( $_GET["device"]){
         switch ($_GET["action"]){
