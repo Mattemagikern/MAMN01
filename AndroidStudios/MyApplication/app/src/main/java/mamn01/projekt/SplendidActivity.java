@@ -42,9 +42,9 @@ public class SplendidActivity extends Activity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
         try {
+            mp.start();
             JSONObject match = new JSONObject(mymatch);
             matchId = match.getString("id");
-            mp = MediaPlayer.create(this, R.raw.wiii);
             setHugccess();
         } catch (JSONException e) {
             e.printStackTrace();
