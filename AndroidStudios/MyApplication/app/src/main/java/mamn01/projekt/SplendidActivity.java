@@ -1,8 +1,10 @@
 package mamn01.projekt;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.os.Bundle;
@@ -37,6 +39,16 @@ public class SplendidActivity extends Activity {
         splendidButton = (Button) findViewById(R.id.splendid);
         feedbackButton = (Button) findViewById(R.id.sendfeed);
         feedbackButton.setVisibility(View.INVISIBLE);
+
+        feedbackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("https://docs.google.com/forms/d/e/1FAIpQLScOxHPrA1jpefeMmVBQbBrtEVvjpPvkxJ9Y74E6Ypnf8fdgVA/viewform?usp=sf_link");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
         splendidButton.setEnabled(false);
         hugpoint= (TextView) findViewById(R.id.hugpoint1);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());

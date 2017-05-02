@@ -29,14 +29,14 @@
     <color name="Cornsilk">#FFF8DC</color>
     <color name="Seashell">#FFF5EE</color>
     <color name="LavenderBlush">#FFF0F5</color>
-    <color name="PapayaWhip">#FFEFD5</color>
+    <color name="PapayaWhip">#ffefd5</color>
     <color name="BlanchedAlmond">#FFEBCD</color>
     <color name="MistyRose">#FFE4E1</color>
     <color name="Bisque">#FFE4C4</color>
-    <color name="Moccasin">#FFE4B5</color>
+    <color name="Moccasin">#ffe4b5</color>
     <color name="NavajoWhite">#FFDEAD</color>
     <color name="PeachPuff">#FFDAB9</color>
-    <color name="Gold">#FFD700</color>
+    <color name="Gold">#fbe151</color>
     <color name="Pink">#FFC0CB</color>
     <color name="LightPink">#FFB6C1</color>
     <color name="Orange">#FFA500</color>
@@ -89,7 +89,7 @@
     <color name="DarkKhaki">#BDB76B</color>
     <color name="RosyBrown">#BC8F8F</color>
     <color name="MediumOrchid">#BA55D3</color>
-    <color name="DarkGoldenrod">#B8860B</color>
+    <color name="DarkGoldenrod">#b8860b</color>
     <color name="FireBrick">#B22222</color>
     <color name="PowderBlue">#B0E0E6</color>
     <color name="LightSteelBlue">#B0C4DE</color>
