@@ -12,6 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Timer;
+
 /**
  * Created by mattemagikern on 2017-04-02.
  */
@@ -19,6 +21,7 @@ import org.w3c.dom.Text;
 public class ConnectActivity extends AppCompatActivity {
 
     private TextView connectText;
+    private Handler h;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,8 @@ public class ConnectActivity extends AppCompatActivity {
             finish();
         }
 
-        new Handler().postDelayed(new Runnable() {
+        h = new Handler();
+        h.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(ConnectActivity.this, MapsActivity.class);
@@ -46,5 +50,10 @@ public class ConnectActivity extends AppCompatActivity {
                 finish();
             }
         }, 2000);
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        h.removeCallbacksAndMessages(null);
     }
 }
