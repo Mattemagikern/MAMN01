@@ -35,8 +35,8 @@
         android:layout_marginRight="24dp"
         android:background="@android:color/holo_orange_light"
         android:onClick="UpdateProfile"
-        android:textStyle="bold"
         android:text="Update Profile"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button6"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -85,4 +85,26 @@
         app:layout_constraintBottom_toTopOf="@+id/rangeBar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/holo_orange_light"
+        android:text="ToggleButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="120dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="8dp"
+        android:gravity="center_vertical"
+        android:text="TestMode"
+        android:textColor="#333"
+        app:layout_constraintBaseline_toBaselineOf="@+id/toggleButton"
+        app:layout_constraintLeft_toRightOf="@+id/toggleButton" />
 </android.support.constraint.ConstraintLayout>

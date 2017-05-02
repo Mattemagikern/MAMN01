@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -43,7 +44,12 @@ public class SearchingActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.serching);
-       ImageView spinner = (ImageView) findViewById(R.id.spinner);
+
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final boolean testMode = sharedPref.getBoolean("testmode", true);
+
+        ImageView spinner = (ImageView) findViewById(R.id.spinner);
         // a nice text animation maybe?
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.rotate);
@@ -61,7 +67,7 @@ public class SearchingActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 String deviceId = Settings.Secure.getString(SearchingActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
-                String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId;
+                String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId + "&testmode=" + testMode;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override

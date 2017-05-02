@@ -5,9 +5,8 @@
   $data = '';
   // All endpoints for users (multiple users)
 
-  // TODO:
-  // Change to FALSE in PRODUCTION!!!!!
-  $testMode = true;  
+  // Check if phone is in testmode
+  $testMode = $_GET['testmode'];
  
   if( $_GET["device"]){
         switch ($_GET["action"]){

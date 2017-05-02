@@ -1,6 +1,8 @@
 package mamn01.projekt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -33,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText nameText;
     private Button cancelButton;
     private Button updateButton;
+    private ToggleButton testToggle;
 
     private int minRange = 100;
     private int currentRange = 2000;
@@ -48,11 +52,16 @@ public class SettingsActivity extends AppCompatActivity {
         rangeBar = (SeekBar) findViewById(R.id.rangeBar);
         rangeText = (TextView) findViewById(R.id.rangeText);
         nameText = (EditText) findViewById(R.id.nameText);
+        testToggle = (ToggleButton) findViewById(R.id.toggleButton);
     }
 
     @Override
     public void onResume(){
         super.onResume();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean testMode = sharedPref.getBoolean("testmode", true);
+        testToggle.setChecked(testMode);
 
         rangeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
@@ -81,6 +90,12 @@ public class SettingsActivity extends AppCompatActivity {
      * Redirect user to WantActivity
      */
     public void UpdateProfile(View v){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("testmode", testToggle.isChecked());
+        editor.commit();
+
         String name = nameText.getText().toString();
         String range = String.valueOf(currentRange);
         if(name.length() < 1){

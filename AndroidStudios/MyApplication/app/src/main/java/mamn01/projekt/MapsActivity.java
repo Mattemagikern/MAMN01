@@ -72,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double dKm = 0;
     private double tmp_dLat = 0, tmp_dLong = 0, tmp_lat = 0, tmp_lng = 0, tmp_dKm = 0;
     private Timer t;
+    private boolean testMode;
 
 
     @Override
@@ -91,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
+        testMode = sharedPref.getBoolean("testmode", true);
         Log.d("Get Match ", mymatch);
         try {
             JSONObject match = new JSONObject(mymatch);
@@ -147,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void positionFetched() {
-        String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId;
+        String url = "http://shapeapp.se/mamn01/?action=getCoordinate&device=" + deviceId + "&id=" + matchId + "&testmode=" + testMode;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
