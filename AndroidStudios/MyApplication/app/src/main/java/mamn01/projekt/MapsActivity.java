@@ -74,14 +74,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double myLong = 0.0;
     private double dLat = 0.0;
     private double dLong = 0.0;
-    private int x = 0;
+    private double x = 0.0;
     private String deviceId;
     private Vibrator vibrator;
     boolean ifVibrate = false;
     private Button hugccessButton;
     private boolean hasGottenClose = false;
     boolean test_mode_wrong_direction = true;
-    private double dKm = 0;
+    private double dKm = -1.0;
     private double tmp_dLat = 0, tmp_dLong = 0, tmp_lat = 0, tmp_lng = 0, tmp_dKm = 0;
     private Timer t;
     private boolean testMode;
@@ -149,8 +149,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             gMap.setMyLocationEnabled(true);
         }
-
-        Log.d("OnMapReady","Done!");
         t = new Timer();
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -161,66 +159,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void doRoute(LatLng myPos, LatLng otherPos){
-        ArrayList<LatLng> MarkerPoints = new ArrayList<>();
-
-        MarkerPoints.add(myPos);
-        //MarkerPoints.add(otherPos);
-
-        // Already two locations
-        if (MarkerPoints.size() > 1) {
-            MarkerPoints.clear();
-            gMap.clear();
-        }
+        //gMap.clear();
 
         // Creating MarkerOptions
-        MarkerOptions options = new MarkerOptions();
+        //MarkerOptions options = new MarkerOptions();
+        //options.position(otherPos);
+        //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        //gMap.addMarker(options);
 
-        // Setting the position of the marker
-        options.position(otherPos);
+        // Getting URL to the Google Directions API
+        String url = getUrl(myPos, otherPos);
+        FetchUrl FetchUrl = new FetchUrl();
 
-        /**
-         * For the start location, the color of marker is GREEN and
-         * for the end location, the color of marker is RED.
-         */
-        if (MarkerPoints.size() == 1) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        } else if (MarkerPoints.size() == 2) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-
-        // Add new marker to the Google Map Android API V2
-        gMap.addMarker(options);
-
-        // Checks, whether start and end locations are captured
-        if (MarkerPoints.size() >= 2) {
-            LatLng origin = MarkerPoints.get(0);
-            LatLng dest = MarkerPoints.get(1);
-
-            // Getting URL to the Google Directions API
-            String url = getUrl(origin, dest);
-            FetchUrl FetchUrl = new FetchUrl();
-
-            // Start downloading json data from Google Directions API
-            FetchUrl.execute(url);
-            //move map camera
-            gMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-            gMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        }
+        // Start downloading json data from Google Directions API
+        FetchUrl.execute(url);
     }
     private String getUrl(LatLng origin, LatLng dest) {
-        // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        // Destination of route
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
 
-        // Sensor enabled
-        String sensor = "sensor=false";
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+        String parameters = str_origin + "&" + str_dest + "&sensor=false&mode=walking";
         // Output format
-        String output = "json";
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/json?" + parameters;
         return url;
     }
     /**
@@ -232,28 +194,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
             urlConnection.connect();
 
             // Reading data from url
             iStream = urlConnection.getInputStream();
-
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
             StringBuffer sb = new StringBuffer();
-
             String line = "";
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            data = sb.toString();
-            Log.d("downloadUrl", data.toString());
+            data = sb.toString();;
             br.close();
-
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
@@ -267,16 +220,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         protected String doInBackground(String... url) {
-
             // For storing data from web service
             String data = "";
-
             try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-                Log.d("Background Task data", data.toString());
             } catch (Exception e) {
-                Log.d("Background Task", e.toString());
+                Log.d("Exception", e.toString());
             }
             return data;
         }
@@ -301,23 +251,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
-
             try {
                 jObject = new JSONObject(jsonData[0]);
-                Log.d("ParserTask",jsonData[0].toString());
                 DataParser parser = new DataParser();
-                Log.d("ParserTask", parser.toString());
-
                 // Starts parsing data
                 routes = parser.parse(jObject);
-                Log.d("ParserTask","Executing routes");
-                Log.d("ParserTask",routes.toString());
-
             } catch (Exception e) {
-                Log.d("ParserTask",e.toString());
                 e.printStackTrace();
             }
             return routes;
@@ -351,18 +292,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(10);
-                lineOptions.color(Color.RED);
-
-                Log.d("onPostExecute","onPostExecute lineoptions decoded");
-
+                lineOptions.color(Color.MAGENTA);
             }
-
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
                 gMap.addPolyline(lineOptions);
-            }
-            else {
-                Log.d("onPostExecute","without Polylines drawn");
             }
         }
     }
@@ -402,21 +336,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 LatLng otherPos = new LatLng(lat, lng);
                                 LatLng myPos = new LatLng(myLat, myLong);
 
-                                // Do a route
-                                doRoute(myPos, otherPos);
-
                                 double prev_dKm = dKm;
-                                dKm = CalculationByDistance(otherPos, myPos);
-                                // Make other go towards us.
-                                double steps = 4;
+                                double dKm = CalculationByDistance(otherPos, myPos);
 
-                                if(testMode && myLat != 0.0 && dKm > 0.3) {
-                                    dLat = dLat + (myLat - lat) / steps;
-                                    dLong = dLong + (myLong - lng) / steps;
+                                // Make other go towards us if in testmode.
+                                double steps = 4.0;
+                                if(testMode && myLat != 0.0) {
+                                    if(x < steps) {
+                                        dLat = dLat + (myLat - lat) / steps;
+                                        dLong = dLong + (myLong - lng) / steps;
+                                    }
                                     lat = lat + (dLat);
                                     lng = lng + (dLong);
                                     prev_dKm = dKm;
-                                    dKm = dKm - (x * dKm / steps);
+                                    double newDistance =(dKm - (x * dKm / steps));
+                                    dKm = newDistance;
                                     if(x == 1 && test_mode_wrong_direction){
                                         tmp_dLat = dLat;
                                         tmp_dLong = dLong;
@@ -433,7 +367,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         lng = tmp_lng;
                                         x = 1;
                                     }
-                                    x++;
+                                    if(x < steps) {
+                                        x++;
+                                    }
                                 }
 
                                 if (prev_dKm > dKm && dKm > 0.3 && dKm < 1.0){
@@ -446,14 +382,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     getFurther.start();
                                 }
 
+                                // clear map
+                                gMap.clear();
+
                                 // Update position
-                                if(!testMode || dKm > 0.3 ) {
-                                    Counterpart.setPosition(new LatLng(lat, lng));
-                                } else if(hasGottenClose == false){
+                                LatLng counterPartPos = new LatLng(lat,lng);
+                                Counterpart = gMap.addMarker(markerOptions);
+                                Counterpart.setPosition(counterPartPos);
+                                // Do a route
+                                doRoute(myPos, counterPartPos);
+
+                                if(hasGottenClose == false){
                                     ifVibrate = true;
                                     hasGottenClose = true;
                                 }
-
                                 if(ifVibrate){
                                     long[] pattern = {0, 500, 1000, 500};
                                     vibrator.vibrate(pattern,-1);
