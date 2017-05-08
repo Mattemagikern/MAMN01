@@ -42,6 +42,10 @@
             case "giveHugpoint":
                 $data = json_encode($dbHandler->giveHugPoint($_GET["device"], $_GET["id"]));
                 break;
+            case "hugcancelled":
+                $dbHandler->setWantNoHug($_GET["device"]);
+                $data = "Hug cancelled";
+                break;
             case "hugfailed":
                 $me = $dbHandler->getByDevice($_GET["device"]);
                 if($_GET["other"] != "1"){

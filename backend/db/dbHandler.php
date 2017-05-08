@@ -155,6 +155,12 @@ EOT;
       $this->log('hugAdded(' . $myid . ', ' . $otherid . ')', $device);
       return count($result) != 0;
     }
+    public function setWantNoHug($device){
+      $sql = "UPDATE mamn01__users SET wantsHug=0 WHERE device=?;";
+      $result = $this->db->executeUpdate($sql, array($device));
+      $this->log("setWantNoHug() -> ", $device);
+      return $this->db->getLastId();
+    }
     public function setBusy($device, $id){
       $sql = "UPDATE mamn01__users SET isBusy=? WHERE device=?;";
       $result = $this->db->executeUpdate($sql, array($id, $device));
