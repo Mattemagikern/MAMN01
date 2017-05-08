@@ -39,12 +39,13 @@ public class SearchingActivity extends AppCompatActivity implements
     private Location location;
     private String lat,lgn;
     private Timer t;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.serching);
-
+        time = System.currentTimeMillis();
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final boolean testMode = sharedPref.getBoolean("testmode", true);
@@ -66,6 +67,12 @@ public class SearchingActivity extends AppCompatActivity implements
         t.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
+
+                long current = System.currentTimeMillis();
+                if(current-time > 10*1000) {
+                    setHugFailed();
+                    return;
+                }
                 String deviceId = Settings.Secure.getString(SearchingActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 String url = "http://shapeapp.se/mamn01/?action=matchMeUp&device=" + deviceId + "&testmode=" + testMode;
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -121,9 +128,7 @@ public class SearchingActivity extends AppCompatActivity implements
         super.onStop();
     }
     public void CancelPressed(View v){
-        t.cancel();
-        t.purge();
-        finish();
+        setHugFailed();
     }
 
     @Override
@@ -145,5 +150,26 @@ public class SearchingActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+    private void setHugFailed() {
+        // Instantiate the RequestQueue.
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String url = "http://shapeapp.se/mamn01/?action=hugcancelled&device=" + deviceId;
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        t.cancel();
+                        t.purge();
+                        finish();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
