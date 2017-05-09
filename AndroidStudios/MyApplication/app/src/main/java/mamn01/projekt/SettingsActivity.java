@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -65,22 +65,25 @@ public class SettingsActivity extends AppCompatActivity {
 
         rangeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                if(fromUser){
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
                     currentRange = 100 + minRange * progress;
                     setRange(currentRange);
                 }
             }
+
             public void onStartTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
             }
+
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
         getProfile();
     }
 
-    public void setRange(int range){
+    public void setRange(int range) {
         rangeText.setText("Range: " + (range) + "m");
         rangeBar.setProgress((currentRange - 100) / minRange);
     }
@@ -89,7 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
     /*
      * Redirect user to WantActivity
      */
-    public void UpdateProfile(View v){
+    public void UpdateProfile(View v) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -98,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         String name = nameText.getText().toString();
         String range = String.valueOf(currentRange);
-        if(name.length() < 1){
+        if (name.length() < 1) {
             Toast.makeText(this, "Please give a name", Toast.LENGTH_LONG).show();
             return;
         }
@@ -109,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
     /*
      * Redirect user to HugboardActivity
      */
-    public void Cancel(View v){
+    public void Cancel(View v) {
         finish();
     }
 

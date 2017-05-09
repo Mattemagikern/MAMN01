@@ -33,7 +33,7 @@ public class HugboardActivity extends ListActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         isPaused = false;
         fetchHugBoard();
@@ -49,30 +49,30 @@ public class HugboardActivity extends ListActivity {
         String url = "http://shapeapp.se/mamn01/?action=getHugboard&device=" + deviceId;
         final ArrayList<String> hugboard = new ArrayList<String>();
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-            (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        if(isPaused)
-                            return;
-                        String dataStr = (String) response.get("data");
-                        JSONArray data = new JSONArray(dataStr);
-                        for(int i = 0; i < data.length(); i++){
-                            JSONObject o = (JSONObject) data.get(i);
-                            hugboard.add(String.valueOf(i +1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + " points");
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (isPaused)
+                                return;
+                            String dataStr = (String) response.get("data");
+                            JSONArray data = new JSONArray(dataStr);
+                            for (int i = 0; i < data.length(); i++) {
+                                JSONObject o = (JSONObject) data.get(i);
+                                hugboard.add(String.valueOf(i + 1) + ". " + o.getString("name") + "\t\t" + o.getString("hugpoints") + " points");
+                            }
+                            setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
+                                    R.layout.hugboard_row, hugboard));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        setListAdapter(new ArrayAdapter<String>(HugboardActivity.this,
-                                R.layout.hugboard_row, hugboard));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
-            }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("Error: " + error.getMessage());
-            }
-        });
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error: " + error.getMessage());
+                    }
+                });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
@@ -82,8 +82,9 @@ public class HugboardActivity extends ListActivity {
         //String item = (String) getListAdapter().getItem(position);
         //Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();;
     }
+
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         isPaused = true;
     }

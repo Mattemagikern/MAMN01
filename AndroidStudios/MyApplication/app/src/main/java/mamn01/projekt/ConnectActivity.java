@@ -51,8 +51,9 @@ public class ConnectActivity extends AppCompatActivity {
             }
         }, 2000);
     }
+
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         h.removeCallbacksAndMessages(null);
     }

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -85,7 +87,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double tmp_dLat = 0, tmp_dLong = 0, tmp_lat = 0, tmp_lng = 0, tmp_dKm = 0;
     private Timer t;
     private boolean testMode;
-
+    private SensorManager sm;
+    private Sensor am;
+    private long lastTime = System.currentTimeMillis();
+    private float last_x, last_y, last_z = 0;
+    private float curr_x, curr_y, curr_z;
+    private boolean drawMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +102,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkLocationPermission();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Log.d("onCreate","Done!");
+        Log.d("onCreate", "Done!");
         deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         hugccessButton = (Button) findViewById(R.id.acc);
         hugccessButton.setEnabled(false);
+        shakefield = (TextView) findViewById(R.id.shake);
 
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        am = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
@@ -145,20 +155,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             gMap.setMyLocationEnabled(true);
-        }else{
+        } else {
             buildGoogleApiClient();
             gMap.setMyLocationEnabled(true);
         }
         t = new Timer();
-        t.scheduleAtFixedRate(new TimerTask(){
+        t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 positionFetched();
             }
-        },0,3000);
+        }, 0, 3000);
     }
 
-    private void doRoute(LatLng myPos, LatLng otherPos){
+    private void doRoute(LatLng myPos, LatLng otherPos) {
         //gMap.clear();
 
         // Creating MarkerOptions
@@ -174,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Start downloading json data from Google Directions API
         FetchUrl.execute(url);
     }
+
     private String getUrl(LatLng origin, LatLng dest) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
@@ -185,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String url = "https://maps.googleapis.com/maps/api/directions/json?" + parameters;
         return url;
     }
+
     /**
      * A method to download json data from url
      */
@@ -205,7 +217,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            data = sb.toString();;
+            data = sb.toString();
+            ;
             br.close();
         } catch (Exception e) {
             Log.d("Exception", e.toString());
@@ -215,6 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return data;
     }
+
     // Fetches data from url passed
     private class FetchUrl extends AsyncTask<String, Void, String> {
 
@@ -295,12 +309,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lineOptions.color(Color.MAGENTA);
             }
             // Drawing polyline in the Google Map for the i-th route
-            if(lineOptions != null) {
+            if (lineOptions != null) {
                 gMap.addPolyline(lineOptions);
             }
         }
     }
-
 
 
     private void positionFetched() {
@@ -320,13 +333,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 boolean hugccess = 1 == data.getInt("hugccess");
                                 boolean lost = 1 == data.getInt("lost");
 
-                                if(hugccess){
+                                if (hugccess) {
                                     finish();
                                 }
-                                if(hugfailed){
+                                if (hugfailed) {
                                     PugActivity(null);
                                 }
-                                if(lost){
+                                if (lost) {
                                     otherIsLost();
                                 }
 
@@ -341,23 +354,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 // Make other go towards us if in testmode.
                                 double steps = 4.0;
-                                if(testMode && myLat != 0.0) {
-                                    if(x < steps) {
+                                if (testMode && myLat != 0.0) {
+                                    if (x < steps) {
                                         dLat = dLat + (myLat - lat) / steps;
                                         dLong = dLong + (myLong - lng) / steps;
                                     }
                                     lat = lat + (dLat);
                                     lng = lng + (dLong);
                                     prev_dKm = dKm;
-                                    double newDistance =(dKm - (x * dKm / steps));
+                                    double newDistance = (dKm - (x * dKm / steps));
                                     dKm = newDistance;
-                                    if(x == 1 && test_mode_wrong_direction){
+                                    if (x == 1 && test_mode_wrong_direction) {
                                         tmp_dLat = dLat;
                                         tmp_dLong = dLong;
                                         tmp_lat = lat;
                                         tmp_lng = lng;
                                         tmp_dKm = dKm;
-                                    } else if(x == 3 && test_mode_wrong_direction){
+                                    } else if (x == 3 && test_mode_wrong_direction) {
                                         test_mode_wrong_direction = false;
                                         prev_dKm = dKm;
                                         dKm = dKm + (x * dKm / steps);
@@ -367,17 +380,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         lng = tmp_lng;
                                         x = 1;
                                     }
-                                    if(x < steps) {
+                                    if (x < steps) {
                                         x++;
                                     }
                                 }
 
-                                if (prev_dKm > dKm && dKm > 0.3 && dKm < 1.0){
+                                if (prev_dKm > dKm && dKm > 0.3 && dKm < 1.0) {
                                     MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
                                     getCloser.start();
                                 }
 
-                                if (prev_dKm < dKm && dKm > 0.3 && dKm < 2.0){
+                                if (prev_dKm < dKm && dKm > 0.3 && dKm < 2.0) {
                                     MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
                                     getFurther.start();
                                 }
@@ -386,20 +399,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 gMap.clear();
 
                                 // Update position
-                                LatLng counterPartPos = new LatLng(lat,lng);
+                                LatLng counterPartPos = new LatLng(lat, lng);
                                 Counterpart = gMap.addMarker(markerOptions);
                                 Counterpart.setPosition(counterPartPos);
                                 // Do a route
-                                doRoute(myPos, counterPartPos);
+                                if(drawMap) {
+                                    Toast.makeText(MapsActivity.this, "Shake detected, We'll help you find your way!", Toast.LENGTH_LONG).show();
+                                    doRoute(myPos, counterPartPos);
+                                }
 
-                                if(hasGottenClose == false){
+
+                                if (hasGottenClose == false) {
                                     ifVibrate = true;
                                     hasGottenClose = true;
                                 }
-                                if(ifVibrate){
+                                if (ifVibrate) {
                                     long[] pattern = {0, 500, 1000, 500};
-                                    vibrator.vibrate(pattern,-1);
-                                    ifVibrate =  false;
+                                    vibrator.vibrate(pattern, -1);
+                                    ifVibrate = false;
                                 }
 
                                 // Enable hugccess if close
@@ -465,16 +482,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gCli.connect();
     }
 
-    public void StarActivity(View v){
+    public void StarActivity(View v) {
         Intent i = new Intent(this, SplendidActivity.class);
         startActivity(i);
         this.finish();
     }
-    public void PugActivity(View v){
-        Intent i = new Intent(this,PugActivity.class);
+
+    public void PugActivity(View v) {
+        Intent i = new Intent(this, PugActivity.class);
         startActivity(i);
         this.finish();
     }
+
     @Override
     public void onLocationChanged(Location location) {
         loc = location;
@@ -533,7 +552,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -600,18 +620,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        curr_x= event.values[0];
+        curr_y= event.values[1];
+        curr_z = event.values[2];
+        long curTime = System.currentTimeMillis();
+        // only allow one update every 100ms.
+        long diffTime = curTime - lastTime;
+    if(diffTime > 100) {
+        lastTime = curTime;
+        float speed = Math.abs(curr_x + curr_y + curr_z  - last_x
+                - last_y - last_z) / diffTime * 10000;
+
+        if (speed > 500) {
+            Log.d("sensor", "shake detected w/ speed: " + speed);
+            drawMap = true;
+        }
     }
+
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
 
-
     }
 
     @Override
-    protected void onPause(){
+    protected void onResume() {
+        super.onResume();
+        sm.registerListener(this, am, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
         super.onPause();
+        sm.unregisterListener(this);
         LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
         t.cancel();
     }

@@ -51,7 +51,7 @@ public class SplendidActivity extends Activity {
         });
 
         splendidButton.setEnabled(false);
-        hugpoint= (TextView) findViewById(R.id.hugpoint1);
+        hugpoint = (TextView) findViewById(R.id.hugpoint1);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String mymatch = sharedPref.getString("mymatch", "NO MATCH FOUND");
         try {
@@ -97,9 +97,10 @@ public class SplendidActivity extends Activity {
 
     /**
      * Redirect user to mainActivity
+     *
      * @param v
      */
-    public void MainActivity(View v){
+    public void MainActivity(View v) {
         finish();
     }
 }

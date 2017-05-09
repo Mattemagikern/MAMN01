@@ -14,7 +14,7 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
-    private Button score , search, settings, feedback;
+    private Button score, search, settings, feedback;
     private MediaPlayer mp;
 
 

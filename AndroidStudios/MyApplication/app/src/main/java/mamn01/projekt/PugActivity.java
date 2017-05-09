@@ -69,13 +69,14 @@ public class PugActivity extends AppCompatActivity {
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
+
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         mp.stop();
     }
 
-    public void BackToMain(View v){
+    public void BackToMain(View v) {
         this.finish();
     }
 }

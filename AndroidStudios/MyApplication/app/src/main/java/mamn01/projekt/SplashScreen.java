@@ -29,9 +29,9 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
             /* Create an Intent that will start the Menu-Activity. */
@@ -54,7 +54,7 @@ public class SplashScreen extends AppCompatActivity {
                             String dataStr = (String) response.get("data");
                             JSONObject data = new JSONObject(dataStr);
                             String nme = data.getString("name");
-                            if(nme != null && nme != ""){
+                            if (nme != null && nme != "") {
                                 Intent mainIntent = new Intent(SplashScreen.this, MainActivity.class);
                                 startActivity(mainIntent);
                                 finish();

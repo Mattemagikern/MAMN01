@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,7 +24,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+
 import org.json.JSONObject;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,7 +40,7 @@ public class SearchingActivity extends AppCompatActivity implements
     private Timer Time;
     private GoogleApiClient Gapi;
     private Location location;
-    private String lat,lgn;
+    private String lat, lgn;
     private Timer t;
     private long time;
 
@@ -63,13 +66,13 @@ public class SearchingActivity extends AppCompatActivity implements
                     .build();
         }
 
-        t =  new Timer();
-        t.scheduleAtFixedRate(new TimerTask(){
+        t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
                 long current = System.currentTimeMillis();
-                if(current-time > 10*1000) {
+                if (current - time > 10 * 1000) {
                     setHugFailed();
                     return;
                 }
@@ -106,15 +109,15 @@ public class SearchingActivity extends AppCompatActivity implements
                             }
 
 
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("Error: " + error.getMessage());
-                    }
-                });
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                System.out.println("Error: " + error.getMessage());
+                            }
+                        });
                 MySingleton.getInstance(SearchingActivity.this).addToRequestQueue(jsObjRequest);
             }
-        },2000,4000);
+        }, 2000, 4000);
     }
 
     @Override
@@ -122,12 +125,14 @@ public class SearchingActivity extends AppCompatActivity implements
         Gapi.connect();
         super.onStart();
     }
+
     @Override
-    protected void onStop(){
+    protected void onStop() {
         Gapi.disconnect();
         super.onStop();
     }
-    public void CancelPressed(View v){
+
+    public void CancelPressed(View v) {
         setHugFailed();
     }
 
@@ -137,7 +142,7 @@ public class SearchingActivity extends AppCompatActivity implements
         if (location != null) {
             lat = String.valueOf(location.getLatitude());
             lgn = String.valueOf(location.getLongitude());
-            Log.d("Lat,Long",lat+" "+lgn);
+            Log.d("Lat,Long", lat + " " + lgn);
         }
     }
 
@@ -146,11 +151,13 @@ public class SearchingActivity extends AppCompatActivity implements
     public void onConnectionSuspended(int i) {
 
     }
+
     //vad ska göras här?
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     private void setHugFailed() {
         // Instantiate the RequestQueue.
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
