@@ -384,12 +384,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     }
                                 }
 
-                                if (prev_dKm > dKm && dKm > 0.3 && dKm < 1.0) {
+                                if (prev_dKm > dKm && dKm > 0.3 && dKm < 10.0) {
                                     MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
                                     getCloser.start();
                                 }
 
-                                if (prev_dKm < dKm && dKm > 0.3 && dKm < 2.0) {
+                                if (prev_dKm < dKm && dKm > 0.3 && dKm < 10.0) {
                                     MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
                                     getFurther.start();
                                 }
@@ -408,7 +408,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
 
 
-                                if (hasGottenClose == false) {
+                                if (hasGottenClose == false && dKm < 0.3) {
                                     ifVibrate = true;
                                     hasGottenClose = true;
                                 }
