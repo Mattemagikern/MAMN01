@@ -107,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         hugccessButton = (Button) findViewById(R.id.acc);
         hugccessButton.setEnabled(false);
-        shakefield = (TextView) findViewById(R.id.shake);
+        //shakefield = (TextView) findViewById(R.id.shake);
 
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         am = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -631,8 +631,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         float speed = Math.abs(curr_x + curr_y + curr_z  - last_x
                 - last_y - last_z) / diffTime * 10000;
 
-        if (speed > 500) {
-            Log.d("sensor", "shake detected w/ speed: " + speed);
+        float accelerationSquareRoot = (curr_x * curr_x + curr_y * curr_y + curr_z * curr_z) / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+
+        //if (speed > 500) {
+        if (accelerationSquareRoot >= 5) {
+                Log.d("sensor", "shake detected w/ speed: " + speed);
             drawMap = true;
         }
     }
