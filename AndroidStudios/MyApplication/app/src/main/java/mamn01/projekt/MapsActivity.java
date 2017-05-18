@@ -93,6 +93,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private float last_x, last_y, last_z;
     private float curr_x, curr_y, curr_z;
     private boolean drawMap;
+    private TextView shake;
+    private MediaPlayer getCloser;
+    private MediaPlayer getFurther;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +107,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         Log.d("onCreate", "Done!");
         deviceId = Settings.Secure.getString(MapsActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
         hugccessButton = (Button) findViewById(R.id.acc);
         hugccessButton.setEnabled(false);
-
+        shake = (TextView) findViewById(R.id.shake);
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         am = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -385,12 +387,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
 
                                 if (prev_dKm > dKm && dKm > 0.3 && dKm < 10.0) {
-                                    MediaPlayer getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
+                                    getCloser = MediaPlayer.create(MapsActivity.this, R.raw.hugsie);
                                     getCloser.start();
                                 }
 
                                 if (prev_dKm < dKm && dKm > 0.3 && dKm < 10.0) {
-                                    MediaPlayer getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
+                                    getFurther = MediaPlayer.create(MapsActivity.this, R.raw.getting_away);
                                     getFurther.start();
                                 }
 
@@ -403,7 +405,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Counterpart.setPosition(counterPartPos);
                                 // Do a route
                                 if(drawMap) {
-                                    Toast.makeText(MapsActivity.this, "Shake detected, We'll help you find your way!", Toast.LENGTH_LONG).show();
                                     doRoute(myPos, counterPartPos);
                                 }
 
@@ -635,6 +636,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //if (speed > 500) {
         if (accelerationSquareRoot >= 5) {
                 Log.d("sensor", "shake detected w/ speed: " + speed);
+            shake.setVisibility(View.GONE);
             drawMap = true;
         }
     }
@@ -660,5 +662,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sm.unregisterListener(this);
         LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
         t.cancel();
+        getCloser.stop();
+        getFurther.stop();
     }
 }
