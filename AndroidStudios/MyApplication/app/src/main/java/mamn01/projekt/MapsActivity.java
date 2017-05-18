@@ -352,7 +352,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 double dKm = CalculationByDistance(otherPos, myPos);
 
                                 // Make other go towards us if in testmode.
-                                double steps = 4.0;
+                                double steps = 8.0;
                                 if (testMode && myLat != 0.0) {
                                     if (x < steps) {
                                         dLat = dLat + (myLat - lat) / steps;
