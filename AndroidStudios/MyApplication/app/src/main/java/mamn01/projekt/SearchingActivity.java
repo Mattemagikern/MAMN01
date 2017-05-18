@@ -134,6 +134,7 @@ public class SearchingActivity extends AppCompatActivity implements
 
     public void CancelPressed(View v) {
         setHugFailed();
+        onPause();
     }
 
     @Override

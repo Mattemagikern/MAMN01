@@ -343,10 +343,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (lost) {
                                     otherIsLost();
                                 }
-
                                 double lat = data.getDouble("lat");
                                 double lng = data.getDouble("lng");
-
                                 LatLng otherPos = new LatLng(lat, lng);
                                 LatLng myPos = new LatLng(myLat, myLong);
 
@@ -664,5 +662,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         t.cancel();
         getCloser.stop();
         getFurther.stop();
+
     }
 }

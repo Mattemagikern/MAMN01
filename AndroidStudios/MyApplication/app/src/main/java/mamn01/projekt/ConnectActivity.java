@@ -57,4 +57,9 @@ public class ConnectActivity extends AppCompatActivity {
         super.onPause();
         h.removeCallbacksAndMessages(null);
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+
+    }
 }
