@@ -660,8 +660,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sm.unregisterListener(this);
         LocationServices.FusedLocationApi.removeLocationUpdates(gCli, this);
         t.cancel();
-        getCloser.stop();
-        getFurther.stop();
+        if(getCloser != null) {
+            getCloser.stop();
+        }
+        if(getFurther != null) {
+            getFurther.stop();
+        }
 
     }
 }
